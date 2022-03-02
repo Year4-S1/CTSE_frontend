@@ -1,47 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/screens/onBoarding/login.dart';
+import 'package:notes_app/screens/onBoarding/splash.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Project Init'),
-    );
+    return Home();
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _HomeState createState() => _HomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        alignment: Alignment.center,
-        child: const Text(
-          "Init",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-      ),
+    return MaterialApp(
+      theme: ThemeData(fontFamily: 'Josefin Sans'),
+      home: SplashScreen(),
     );
   }
 }

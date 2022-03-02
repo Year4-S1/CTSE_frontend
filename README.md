@@ -14,3 +14,15 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+# todo
+
+# Login feature which register a user and stuff
+
+# Typed text feature
+
+# Audio text feature
+
+# Reminders feature like saving special dates and stuff
+
+# https://medium.com/flutter-community/flutter-use-google-calendar-api-adding-the-events-to-calendar-3d8fcb008493
