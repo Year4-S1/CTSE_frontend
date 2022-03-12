@@ -31,9 +31,10 @@ class _LoginScreenState extends State<LoginScreen> {
           preferredSize: const Size.fromHeight(55),
           child: CustomAppbarWidget(
             mainTitle: "Noteworthy",
-            leadingImg: true,
+            leading: "None",
             logo: true,
-            searchIcon: false,
+            save: false,
+            navLocation: LoginScreen(),
           ),
         ),
         body: GestureDetector(
