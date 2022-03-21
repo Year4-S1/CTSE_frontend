@@ -10,19 +10,21 @@ class CustomTextBox extends StatelessWidget {
   bool enabled;
   int minLine;
   int maxLine;
-
   TextStyle hintStyle;
   String? labelText;
   String? prifixIcon;
+  String? type;
   bool obscureText;
-  String Function(dynamic)? validator;
+  String? Function(dynamic)? validator;
 
   CustomTextBox({
     required this.controller,
     this.textCapitalization = TextCapitalization.none,
     this.keyboardType = TextInputType.text,
+    this.validator,
     this.readOnly = false,
     this.enabled = true,
+    this.type,
     this.minLine = 1,
     this.maxLine = 1,
     this.hintStyle = HintStyle1,
@@ -31,14 +33,31 @@ class CustomTextBox extends StatelessWidget {
     this.obscureText = false,
   });
 
-  static InputBorder enabledBorder = const OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-      borderSide: BorderSide(
-          color: Colors.black,
-          width: 0.5)); //for some reason can't give through variable
-
   static InputBorder errorBorder =
       const OutlineInputBorder(borderSide: BorderSide(color: Colors.red));
+
+  inputFormatter() {
+    if (type == "phoneNumber") {
+      return [
+        FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+        FilteringTextInputFormatter.deny(RegExp(r'^0+')),
+        FilteringTextInputFormatter.deny(RegExp(r'^94+')),
+        LengthLimitingTextInputFormatter(9),
+      ];
+    }
+    if (type == "nic") {
+      return [
+        FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+        FilteringTextInputFormatter.allow(RegExp('[x|X|v|V]')),
+        LengthLimitingTextInputFormatter(12),
+      ];
+    }
+    if (type == "number") {
+      return [
+        FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+      ];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +70,7 @@ class CustomTextBox extends StatelessWidget {
           minLines: minLine,
           keyboardType: keyboardType,
           autofocus: false,
+          inputFormatters: inputFormatter(),
           textCapitalization: textCapitalization,
           validator: validator,
           controller: controller,

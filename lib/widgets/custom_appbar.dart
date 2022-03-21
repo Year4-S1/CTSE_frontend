@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/screens/home.dart';
-import 'package:notes_app/screens/notes/newNote.dart';
 import 'package:page_transition/page_transition.dart';
 import '../styles.dart';
 
 class CustomAppbarWidget extends StatefulWidget {
   String mainTitle = "Noteworthy";
-  String leading;
-  bool logo;
-  bool save = false;
-  Widget? navLocation;
+  String leading; // leading icon
+  String rightIcon = "save"; //save || profile || ""
+  bool logo; //middle logo
+  Widget? navLocation; // back button nav
+  void Function()? onPress; // right action onpress
   GlobalKey<ScaffoldState>? drawerKey = GlobalKey();
 
   CustomAppbarWidget(
       {required this.mainTitle,
       required this.leading,
       required this.logo,
-      required this.save,
+      required this.rightIcon,
+      this.onPress,
       this.navLocation,
       this.drawerKey});
 
   @override
-  _CustomAppbarWidgetState createState() => new _CustomAppbarWidgetState();
+  _CustomAppbarWidgetState createState() => _CustomAppbarWidgetState();
 }
 
 class _CustomAppbarWidgetState extends State<CustomAppbarWidget> {
@@ -39,17 +40,10 @@ class _CustomAppbarWidgetState extends State<CustomAppbarWidget> {
           widget.leading, context, widget.drawerKey, widget.navLocation!),
       actions: [
         Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.only(right: 20),
-            child: widget.save
-                ? GestureDetector(
-                    onTap: () {},
-                    child: const Text(
-                      "Save",
-                      style: SeeAllStyle,
-                    ),
-                  )
-                : null),
+          alignment: Alignment.center,
+          margin: const EdgeInsets.only(right: 20),
+          child: rightAction(widget.rightIcon, widget.onPress),
+        ),
       ],
       title: widget.logo
           ? const Padding(
@@ -61,6 +55,28 @@ class _CustomAppbarWidgetState extends State<CustomAppbarWidget> {
               style: HeaderStyle,
             ),
     );
+  }
+}
+
+rightAction(String type, void Function()? onPress) {
+  if (type == "save") {
+    return GestureDetector(
+      onTap: onPress,
+      child: const Text(
+        "Save",
+        style: SeeAllStyle,
+      ),
+    );
+  } else if (type == "profile") {
+    return GestureDetector(
+      onTap: onPress,
+      child: const Icon(
+        Icons.person_sharp,
+        color: Colors.black45,
+      ),
+    );
+  } else {
+    return null;
   }
 }
 

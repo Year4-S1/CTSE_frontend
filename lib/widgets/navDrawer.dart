@@ -35,7 +35,7 @@ class _NavDrawerScreen extends State<NavDrawer> {
             leading: IconButton(
                 icon: Icon(
                   Icons.notes,
-                  color: DefaultColor,
+                  color: defaultColor,
                   size: 30,
                 ),
                 onPressed: () {

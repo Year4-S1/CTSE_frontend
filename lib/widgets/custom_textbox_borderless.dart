@@ -12,6 +12,7 @@ class CustomTextBoxBorderLess extends StatelessWidget {
   int minLine;
   int maxLine;
   String? labelText;
+  String? errorText;
   Widget? prifixIcon;
   bool obscureText;
 
@@ -25,6 +26,7 @@ class CustomTextBoxBorderLess extends StatelessWidget {
     this.minLine = 1,
     this.maxLine = 1,
     this.labelText,
+    this.errorText,
     this.prifixIcon,
     this.obscureText = false,
   });
@@ -35,7 +37,7 @@ class CustomTextBoxBorderLess extends StatelessWidget {
       Container(
         padding: EdgeInsets.only(left: prifixIcon != null ? 50 : 10, right: 10),
         child: TextFormField(
-          style: TextStyle(fontSize: 18.0, fontFamily: DefaultFont),
+          style: const TextStyle(fontSize: 18.0, fontFamily: defaultFont),
           maxLines: maxLine,
           minLines: minLine,
           keyboardType: keyboardType,
@@ -49,7 +51,9 @@ class CustomTextBoxBorderLess extends StatelessWidget {
             fillColor: Colors.grey[50],
             labelText: labelText,
             labelStyle: LabelStyle1,
-            contentPadding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+            errorText: errorText,
+            errorStyle: errorStyle,
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
             enabled: enabled,
           ),
         ),

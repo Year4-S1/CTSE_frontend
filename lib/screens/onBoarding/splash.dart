@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:notes_app/screens/home.dart';
 import 'package:notes_app/screens/onBoarding/login.dart';
 
 import 'package:notes_app/styles.dart';
-
-// import '../home.dart';
+import 'package:notes_app/utils/settings.dart';
 
 class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
@@ -15,13 +15,30 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 5), () {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => LoginScreen(),
-        ),
-      );
-    });
+    navChecker();
+  }
+
+  navChecker() async {
+    bool? checker = await Settings.getSigned();
+    checker ??= false;
+
+    if (checker) {
+      Future.delayed(const Duration(seconds: 5), () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+        );
+      });
+    } else {
+      Future.delayed(const Duration(seconds: 5), () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => LoginScreen(),
+          ),
+        );
+      });
+    }
   }
 
   @override

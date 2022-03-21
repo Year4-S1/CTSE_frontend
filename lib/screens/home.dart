@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:notes_app/main.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:notes_app/utils/settings.dart';
 import 'package:notes_app/widgets/custom_appbar.dart';
-import 'package:notes_app/widgets/custom_tile.dart';
-import 'package:notes_app/widgets/navDrawer.dart';
+import 'package:notes_app/widgets/dialog/loadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
-
+import 'package:notes_app/widgets/navDrawer.dart';
+import 'package:flutter/material.dart';
 import '../styles.dart';
+import '../widgets/dialog/updatePassword.dart';
 import 'notes/newNote.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,11 +15,31 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  TextEditingController oldPassword = TextEditingController();
+  TextEditingController newPassword = TextEditingController();
   bool shouldPop = false; //to make sure can't go back
+  bool? signed = false;
+  bool loaded = false;
+
+  List<String> itemListTest = [
+    "Item 1",
+    "Item 2 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum lobortis tempus lectus. Phasellus scelerisque tortor elit, vel pellentesque augue maximus id. ",
+    "Item 3 Proin nec lacus in nisi gravida lacinia. Nam rhoncus, dolor ac imperdiet cursus, purus dui auctor mi, sit amet placerat ex est tempor metus. Suspendisse in faucibus urna. In sollicitudin egestas eros vitae sodales. Sed sed placerat lorem, eu tincidunt nisl. Etiam dolor felis, posuere eget massa et, porttitor sodales quam. Mauris finibus tristique nisl sed volutpat. Donec nulla tellus, molestie vitae vulputate sit amet, faucibus sit amet sem. Aliquam",
+    "Item 4 aliquam, bibendum quam nec, iaculis odio. Ut sed ullamcorper felis. Morbi tincidunt elit ac erat ornare sodales sit amet vestibulum ante. Ut sapien erat, dignissim",
+    "Item 5 Sed condimentum "
+  ];
 
   @override
   void initState() {
+    getUser();
     super.initState();
+  }
+
+  getUser() async {
+    signed = await Settings.getSigned();
+    setState(() {
+      loaded = true;
+    });
   }
 
   @override
@@ -38,7 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
             mainTitle: "Noteworthy",
             leading: "Menu",
             logo: true,
-            save: false,
+            rightIcon: signed! ? "profile" : "",
+            onPress: () {
+              updatePasswordPopup(context, oldPassword, newPassword);
+            },
             navLocation: HomeScreen(),
             drawerKey: _drawerKey,
           ),
@@ -50,54 +73,73 @@ class _HomeScreenState extends State<HomeScreen> {
               Icons.note_alt_outlined,
               size: 35,
             ),
-            backgroundColor: DefaultColor,
+            backgroundColor: defaultColor,
             onPressed: () {
               Navigator.push(
                   context,
                   PageTransition(
                       type: PageTransitionType.bottomToTop, child: NewNote()));
             }),
-        body: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: SizedBox(
-              height: MediaQuery.of(context).size.height,
-              width: width,
-              child: const DefaultTabController(
-                length: 2,
-                child: Scaffold(
-                  appBar: TabBar(
-                    indicatorColor: DefaultColor,
-                    indicatorWeight: 1.0,
-                    tabs: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 15, bottom: 10),
-                        child: Text(
-                          "Notes",
-                          style: HeaderStyle2,
+        body: loaded
+            ? GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    width: width,
+                    child: DefaultTabController(
+                      length: 2,
+                      child: Scaffold(
+                        appBar: const TabBar(
+                          indicatorColor: defaultColor,
+                          indicatorWeight: 1.0,
+                          tabs: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 15, bottom: 10),
+                              child: Text(
+                                "Notes",
+                                style: HeaderStyle2,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 15, bottom: 10),
+                              child: Text(
+                                "Todo",
+                                style: HeaderStyle2,
+                              ),
+                            ),
+                          ],
                         ),
+                        body: TabBarView(children: [
+                          Center(
+                            child: MasonryGridView.count(
+                              crossAxisCount: 2,
+                              itemCount: itemListTest.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  margin: const EdgeInsets.all(5),
+                                  color: Colors.black26,
+                                  padding: const EdgeInsets.all(10),
+                                  child: ConstrainedBox(
+                                    constraints: const BoxConstraints(
+                                      minHeight: 50.0,
+                                      maxHeight: 150.0,
+                                    ),
+                                    child: Text(itemListTest[index]),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const Center(
+                            child: Text("data 2"),
+                          ),
+                        ]),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 15, bottom: 10),
-                        child: Text(
-                          "Todo",
-                          style: HeaderStyle2,
-                        ),
-                      ),
-                    ],
-                  ),
-                  body: TabBarView(children: [
-                    Center(
-                      child: Text("data 1"),
-                    ),
-                    Center(
-                      child: Text("data 2"),
-                    ),
-                  ]),
-                ),
-              )),
-        ),
+                    )),
+              )
+            : loadingDialog(context),
       ),
     );
   }

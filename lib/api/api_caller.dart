@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'api_response.dart';
 import 'api_status.dart';
@@ -16,17 +17,17 @@ class ApiCaller {
           connectivityResult == ConnectivityResult.wifi) {
         Map<String, String> allHeaders = new Map();
         allHeaders["Accept"] = "application/json";
+        allHeaders["Content-Type"] = "application/json; charset=UTF-8";
         if (headers != null && headers.length > 0) {
           allHeaders.addAll(headers);
         }
         print("Url: " + baseUrl + endpoint);
-        // print(data);
 
         final response = await http
             .post(
               Uri.parse(baseUrl + endpoint),
               headers: allHeaders,
-              body: data,
+              body: jsonEncode(data),
             )
             .timeout(const Duration(seconds: timeout));
 

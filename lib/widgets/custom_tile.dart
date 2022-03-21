@@ -52,7 +52,7 @@ class _CustomTileScreen extends State<CustomTile> {
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                     color: Colors.black54,
-                    fontFamily: DefaultFont,
+                    fontFamily: defaultFont,
                     fontSize: 19,
                     fontWeight: FontWeight.bold),
               ),
