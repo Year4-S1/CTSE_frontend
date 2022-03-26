@@ -1,3 +1,5 @@
+import 'package:notes_app/api/api_calls.dart';
+import 'package:notes_app/utils/settings.dart';
 import 'package:notes_app/widgets/custom_textbox.dart';
 import 'package:flutter/material.dart';
 import '../../styles.dart';
@@ -7,12 +9,23 @@ updatePasswordPopup(BuildContext context, TextEditingController oldPassword,
   double height = MediaQuery.of(context).size.height;
   double width = MediaQuery.of(context).size.width;
   final formKey = GlobalKey<FormState>();
+  String token;
 
-  update() async {
+  update(String newPassword) async {
+    token = (await Settings.getAccessToken())!;
+
     if (formKey.currentState!.validate()) {
-      print("lalalalal");
-    } else {
-      print("2222222");
+      final response =
+          await ApiCalls.forgotPassword(token: token, newPassword: newPassword);
+
+      var json = response.jsonBody;
+
+      if (response.isSuccess) {
+        if (json['message'] == "OTP Sent") {
+        } else {
+          //
+        }
+      }
     }
   }
 
@@ -93,7 +106,7 @@ updatePasswordPopup(BuildContext context, TextEditingController oldPassword,
                     ),
                     GestureDetector(
                       onTap: () {
-                        update();
+                        update(newPassword.text);
                       },
                       child: Container(
                           width: 140,

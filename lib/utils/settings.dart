@@ -40,4 +40,14 @@ class Settings {
     final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
     return sharedPrefs.getString("user_email");
   }
+
+  static setActiveCategory(String category) async {
+    final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    sharedPrefs.setString("active_category", category);
+  }
+
+  static Future<String?> getActiveCategory() async {
+    final SharedPreferences sharedPrefs = await SharedPreferences.getInstance();
+    return sharedPrefs.getString("active_category");
+  }
 }

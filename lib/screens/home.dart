@@ -1,4 +1,5 @@
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:notes_app/api/api_calls.dart';
 import 'package:notes_app/utils/settings.dart';
 import 'package:notes_app/widgets/custom_appbar.dart';
 import 'package:notes_app/widgets/dialog/loadingDialog.dart';
@@ -19,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController newPassword = TextEditingController();
   bool shouldPop = false; //to make sure can't go back
   bool? signed = false;
+  String? userId;
   bool loaded = false;
 
   List<String> itemListTest = [
@@ -28,15 +30,28 @@ class _HomeScreenState extends State<HomeScreen> {
     "Item 4 aliquam, bibendum quam nec, iaculis odio. Ut sed ullamcorper felis. Morbi tincidunt elit ac erat ornare sodales sit amet vestibulum ante. Ut sapien erat, dignissim",
     "Item 5 Sed condimentum "
   ];
+  Map<String, dynamic> noteList = {};
 
   @override
   void initState() {
-    getUser();
+    getNotes();
     super.initState();
   }
 
-  getUser() async {
+  getNotes() async {
+    setState(() {
+      loaded = false;
+    });
+
     signed = await Settings.getSigned();
+    userId = await Settings.getUserID();
+
+    var res = await ApiCalls.getNotes(userId: userId!);
+
+    noteList = res.jsonBody;
+
+    print(noteList);
+
     setState(() {
       loaded = true;
     });
@@ -59,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: "Menu",
             logo: true,
             rightIcon: signed! ? "profile" : "",
-            onPress: () {
+            rightOnPress: () {
               updatePasswordPopup(context, oldPassword, newPassword);
             },
             navLocation: HomeScreen(),
@@ -112,24 +127,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         body: TabBarView(children: [
-                          Center(
-                            child: MasonryGridView.count(
-                              crossAxisCount: 2,
-                              itemCount: itemListTest.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  margin: const EdgeInsets.all(5),
-                                  color: Colors.black26,
-                                  padding: const EdgeInsets.all(10),
-                                  child: ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                      minHeight: 50.0,
-                                      maxHeight: 150.0,
+                          RefreshIndicator(
+                            onRefresh: _pullRefresh,
+                            child: Center(
+                              child: MasonryGridView.count(
+                                crossAxisCount: 2,
+                                itemCount: noteList['data'].length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: const EdgeInsets.all(5),
+                                    color: noteColorSetter(noteList['data']
+                                        [index]['categoryColor']),
+                                    padding: const EdgeInsets.all(10),
+                                    child: ConstrainedBox(
+                                      constraints: const BoxConstraints(
+                                        minHeight: 50.0,
+                                        maxHeight: 150.0,
+                                      ),
+                                      child: Text(noteList['data'][index]
+                                          ['noteMessage']),
                                     ),
-                                    child: Text(itemListTest[index]),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ),
                           const Center(
@@ -142,5 +162,29 @@ class _HomeScreenState extends State<HomeScreen> {
             : loadingDialog(context),
       ),
     );
+  }
+
+  noteColorSetter(String color) {
+    switch (color) {
+      case "pink":
+        return notePink;
+      case "purple":
+        return notePurple;
+      case "blue":
+        return noteBlue;
+      case "green":
+        return noteGreen;
+      case "yellow":
+        return noteYellow;
+      case "orange":
+        return noteOrange;
+      default:
+        return Colors.black26;
+    }
+  }
+
+  Future<void> _pullRefresh() async {
+    getNotes();
+    setState(() {});
   }
 }

@@ -63,7 +63,7 @@ class CustomTextBoxBorderLess extends StatelessWidget {
             ? Container(
                 width: 35,
                 height: 35,
-                margin: EdgeInsets.only(left: 3, top: 7),
+                margin: const EdgeInsets.only(left: 3, top: 7),
                 child: prifixIcon,
               )
             : null,

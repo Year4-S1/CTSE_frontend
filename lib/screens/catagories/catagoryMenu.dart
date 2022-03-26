@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:notes_app/api/api_calls.dart';
 import 'package:notes_app/screens/home.dart';
@@ -8,6 +6,7 @@ import 'package:notes_app/widgets/custom_appbar.dart';
 import 'package:notes_app/widgets/custom_button.dart';
 import 'package:notes_app/widgets/custom_textbox_borderless.dart';
 import 'package:notes_app/widgets/dialog/loadingDialog.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../../styles.dart';
 
@@ -24,10 +23,9 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
   TextEditingController orangeController = TextEditingController();
 
   Map<String, dynamic> catagoryList = {};
-  Map<dynamic, dynamic> updateCatagory = {};
-  Map<dynamic, dynamic> createCatagory = {};
+  Map<dynamic, dynamic> postCatagories = {};
 
-  String? token;
+  String? userId;
 
   bool shouldPop = true;
   bool loaded = false;
@@ -39,63 +37,73 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
   }
 
   getData() async {
-    token = await Settings.getAccessToken();
-    var res = await ApiCalls.getCatagories(token: token!);
+    userId = await Settings.getUserID();
+    var res = await ApiCalls.getCatagories(userId: userId!);
 
     catagoryList = res.jsonBody;
 
-    if (catagoryList['data'] != null) {
-      for (int i = 0; i < catagoryList['data'].length; i++) {
-        switch (catagoryList['data'][i]['categoryColor']) {
-          case "pink":
-            pinkController.text = catagoryList['data'][i]['categoryName'];
-            break;
-          case "purple":
-            purpleController.text = catagoryList['data'][i]['categoryName'];
-            break;
-          case "blue":
-            blueController.text = catagoryList['data'][i]['categoryName'];
-            break;
-          case "green":
-            greenController.text = catagoryList['data'][i]['categoryName'];
-            break;
-          case "yellow":
-            yellowController.text = catagoryList['data'][i]['categoryName'];
-            break;
-          case "orange":
-            orangeController.text = catagoryList['data'][i]['categoryName'];
-            break;
-          default:
+    setState(() {
+      if (catagoryList['data'] != null) {
+        for (int i = 0; i < catagoryList['data'].length; i++) {
+          switch (catagoryList['data'][i]['categoryColor']) {
+            case "pink":
+              pinkController.text = catagoryList['data'][i]['categoryName'];
+              break;
+            case "purple":
+              purpleController.text = catagoryList['data'][i]['categoryName'];
+              break;
+            case "blue":
+              blueController.text = catagoryList['data'][i]['categoryName'];
+              break;
+            case "green":
+              greenController.text = catagoryList['data'][i]['categoryName'];
+              break;
+            case "yellow":
+              yellowController.text = catagoryList['data'][i]['categoryName'];
+              break;
+            case "orange":
+              orangeController.text = catagoryList['data'][i]['categoryName'];
+              break;
+            default:
+          }
         }
       }
-    }
 
-    setState(() {
       loaded = true;
     });
   }
 
   postCatagory() async {
-    print("post cat came here");
+    setState(() {
+      loaded = false;
+    });
 
-    if (createCatagory.isNotEmpty) {
-      print("post cat came createCatagory" + createCatagory.toString());
+    postCatagories = {
+      "pink": pinkController.text,
+      "purple": purpleController.text,
+      "blue": blueController.text,
+      "green": greenController.text,
+      "yellow": yellowController.text,
+      "orange": orangeController.text,
+      "unassigned": ""
+    };
+
+    if (postCatagories.isNotEmpty) {
       var res = await ApiCalls.postCatagories(
-          catagories: createCatagory, token: token!);
+          catagories: postCatagories, userId: userId!);
 
       var json = res.jsonBody;
       print(json);
-    }
-    if (updateCatagory.isNotEmpty) {
-      print("post cat came updateCatagory" + updateCatagory.toString());
-      var res = await ApiCalls.updateCatagories(
-          catagories: updateCatagory, token: token!);
-      var json = res.jsonBody;
-    }
 
-    setState(() {
-      loaded = true;
-    });
+      setState(() {
+        loaded = true;
+      });
+
+      Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.bottomToTop, child: HomeScreen()));
+    }
   }
 
   @override
@@ -197,7 +205,7 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          catagoryChecker();
+                          postCatagory();
                         },
                         child: Container(
                           margin: const EdgeInsets.only(top: 150),
@@ -214,76 +222,5 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
             : loadingDialog(context),
       ),
     );
-  }
-
-  catagoryChecker() async {
-    setState(() {
-      loaded = false;
-    });
-    print(catagoryList['data']);
-    if (catagoryList['data'].length > 0) {
-      for (int i = 0; i < catagoryList['data'].length; i++) {
-        switch (catagoryList['data'][i]['categoryColor']) {
-          case "pink":
-            updateCatagory["pink"] = pinkController.text;
-            break;
-          case "purple":
-            updateCatagory["purple"] = purpleController.text;
-            break;
-          case "blue":
-            updateCatagory["blue"] = blueController.text;
-            break;
-          case "green":
-            updateCatagory["green"] = greenController.text;
-            break;
-          case "yellow":
-            updateCatagory["yellow"] = yellowController.text;
-            break;
-          case "orange":
-            updateCatagory["orange"] = orangeController.text;
-            break;
-          default:
-        }
-
-        if (catagoryList['data'][i]['categoryColor'] != "pink" &&
-            pinkController.text != "") {
-          createCatagory["pink"] = pinkController.text;
-        } else if (catagoryList['data'][i]['categoryColor'] != "purple" &&
-            purpleController.text != "") {
-          createCatagory["purple"] = purpleController.text;
-        } else if (catagoryList['data'][i]['categoryColor'] != "blue" &&
-            blueController.text != "") {
-          createCatagory["blue"] = blueController.text;
-        } else if (catagoryList['data'][i]['categoryColor'] != "green" &&
-            greenController.text != "") {
-          createCatagory["green"] = greenController.text;
-        } else if (catagoryList['data'][i]['categoryColor'] != "yellow" &&
-            yellowController.text != "") {
-          createCatagory["yellow"] = yellowController.text;
-        } else if (catagoryList['data'][i]['categoryColor'] != "orange" &&
-            orangeController.text != "") {
-          createCatagory["orange"] = orangeController.text;
-        } else {
-          null;
-        }
-      }
-    } else {
-      if (pinkController.text != "") {
-        createCatagory["pink"] = pinkController.text;
-      } else if (purpleController.text != "") {
-        createCatagory["purple"] = purpleController.text;
-      } else if (blueController.text != "") {
-        createCatagory["blue"] = blueController.text;
-      } else if (greenController.text != "") {
-        createCatagory["green"] = greenController.text;
-      } else if (yellowController.text != "") {
-        createCatagory["yellow"] = yellowController.text;
-      } else if (orangeController.text != "") {
-        createCatagory["orange"] = orangeController.text;
-      } else {
-        null;
-      }
-    }
-    postCatagory();
   }
 }

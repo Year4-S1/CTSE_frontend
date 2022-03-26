@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:notes_app/api/api_calls.dart';
 import 'package:notes_app/screens/catagories/catagoryMenu.dart';
+import 'package:notes_app/screens/onBoarding/login.dart';
+import 'package:notes_app/utils/settings.dart';
+import 'package:notes_app/widgets/dialog/loadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../styles.dart';
@@ -13,13 +16,43 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerScreen extends State<NavDrawer> {
+  Map<String, dynamic> catagoryList = {};
+  bool shouldPop = true;
+  bool loaded = false;
+  String? userId;
+
   @override
   void initState() {
+    getData();
     super.initState();
+  }
+
+  getData() async {
+    userId = await Settings.getUserID();
+    var res = await ApiCalls.getCatagories(userId: userId!);
+
+    catagoryList = res.jsonBody;
+
+    setState(() {
+      loaded = true;
+    });
+  }
+
+  logout() async {
+    await Settings.setAccessToken("");
+    await Settings.setUserID("");
+
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.bottomToTop, child: LoginScreen()));
   }
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -27,13 +60,13 @@ class _NavDrawerScreen extends State<NavDrawer> {
           const SizedBox(
             height: 80,
           ),
-          Center(child: const Text("Noteworthy", style: SplashLogoText)),
+          const Center(child: Text("Noteworthy", style: SplashLogoText)),
           const SizedBox(
             height: 40,
           ),
           ListTile(
             leading: IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.notes,
                   color: defaultColor,
                   size: 30,
@@ -41,11 +74,11 @@ class _NavDrawerScreen extends State<NavDrawer> {
                 onPressed: () {
                   Navigator.pop(context);
                 }),
-            title: Text(
+            title: const Text(
               'All notes',
               style: SubHeadStyle,
             ),
-            trailing: Text(
+            trailing: const Text(
               "2",
               style: SubHeadStyle,
             ),
@@ -60,7 +93,7 @@ class _NavDrawerScreen extends State<NavDrawer> {
               'Catagories',
               style: greyNormalTextStyle,
             ),
-            trailing: Text(
+            trailing: const Text(
               "Edit",
               style: SeeAllStyle,
             ),
@@ -73,26 +106,85 @@ class _NavDrawerScreen extends State<NavDrawer> {
                       child: CatagoryMenuScreen())),
             },
           ),
-          ListTile(
-            leading: IconButton(
-                icon: Icon(
-                  Icons.bookmark,
-                  color: Colors.red,
-                  size: 30,
-                ),
-                onPressed: () {}),
-            title: Text(
-              'Work',
-              style: SubHeadStyle,
-            ),
-            trailing: Text(
-              "0",
-              style: SubHeadStyle,
-            ),
-            onTap: () => {},
+          Container(
+            height: height - 380,
+            alignment: Alignment.center,
+            child: catagoryList.isNotEmpty
+                ? GridView.builder(
+                    padding: EdgeInsets.zero,
+                    physics: const ScrollPhysics(),
+                    itemCount: catagoryList['data'].length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            mainAxisExtent: 50, crossAxisCount: 1),
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: IconButton(
+                            icon: Icon(
+                              Icons.bookmark,
+                              color: iconColorSetter(
+                                  catagoryList['data'][index]['categoryColor']),
+                              size: 30,
+                            ),
+                            onPressed: () {}),
+                        title: Text(
+                          catagoryList['data'][index]['categoryName']
+                              .toString(),
+                          overflow: TextOverflow.ellipsis,
+                          style: SubHeadStyle,
+                        ),
+                        trailing: const Text(
+                          "0",
+                          style: SubHeadStyle,
+                        ),
+                        onTap: () => {},
+                      );
+                    },
+                  )
+                : loadingDialog(context),
           ),
+          SizedBox(
+            height: 50,
+            child: ListTile(
+              title: const Text(
+                "Logout",
+                textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
+                style: SubHeadStyle,
+              ),
+              trailing: IconButton(
+                  icon: const Icon(
+                    Icons.logout_sharp,
+                    color: defaultColor,
+                    size: 30,
+                  ),
+                  onPressed: () {}),
+              onTap: () {
+                logout();
+              },
+            ),
+          )
         ],
       ),
     );
+  }
+
+  iconColorSetter(String color) {
+    switch (color) {
+      case "pink":
+        return catagoryPink;
+      case "purple":
+        return catagoryPurple;
+      case "blue":
+        return catagoryBlue;
+      case "green":
+        return catagoryGreen;
+      case "yellow":
+        return catagoryYellow;
+      case "orange":
+        return catagoryOrange;
+      default:
+        return Colors.black26;
+    }
   }
 }

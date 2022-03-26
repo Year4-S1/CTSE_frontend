@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
           String accessToken = json['token'];
           await Settings.setAccessToken(accessToken);
           String userId = json['id'];
-          await Settings.setAccessToken(userId);
+          await Settings.setUserID(userId);
           await Settings.setUserEmail(emailController.text);
 
           snackBar("Welcome");

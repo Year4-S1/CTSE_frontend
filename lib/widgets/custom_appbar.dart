@@ -9,7 +9,8 @@ class CustomAppbarWidget extends StatefulWidget {
   String rightIcon = "save"; //save || profile || ""
   bool logo; //middle logo
   Widget? navLocation; // back button nav
-  void Function()? onPress; // right action onpress
+  void Function()? rightOnPress; // right action onpress
+  void Function()? backOnPress; // left action onpress
   GlobalKey<ScaffoldState>? drawerKey = GlobalKey();
 
   CustomAppbarWidget(
@@ -17,7 +18,8 @@ class CustomAppbarWidget extends StatefulWidget {
       required this.leading,
       required this.logo,
       required this.rightIcon,
-      this.onPress,
+      this.rightOnPress,
+      this.backOnPress,
       this.navLocation,
       this.drawerKey});
 
@@ -36,13 +38,13 @@ class _CustomAppbarWidgetState extends State<CustomAppbarWidget> {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
-      leading: leadingButton(
-          widget.leading, context, widget.drawerKey, widget.navLocation!),
+      leading: leadingButton(widget.leading, context, widget.drawerKey,
+          widget.navLocation!, widget.rightIcon, widget.backOnPress),
       actions: [
         Container(
           alignment: Alignment.center,
           margin: const EdgeInsets.only(right: 20),
-          child: rightAction(widget.rightIcon, widget.onPress),
+          child: rightAction(widget.rightIcon, widget.rightOnPress),
         ),
       ],
       title: widget.logo
@@ -80,14 +82,21 @@ rightAction(String type, void Function()? onPress) {
   }
 }
 
-leadingButton(String leading, BuildContext context,
-    GlobalKey<ScaffoldState>? drawerKey, Widget? navLocation) {
+leadingButton(
+    String leading,
+    BuildContext context,
+    GlobalKey<ScaffoldState>? drawerKey,
+    Widget? navLocation,
+    String rightIcon,
+    Function()? backOnPress) {
   if (leading == "Back") {
     return IconButton(
         icon: const Icon(Icons.arrow_back_ios, color: Colors.black45),
-        onPressed: () {
-          Navigator.pop(context);
-        });
+        onPressed: rightIcon == "save"
+            ? backOnPress
+            : () {
+                Navigator.pop(context);
+              });
   } else if (leading == "Navigate") {
     return IconButton(
         icon: const Icon(Icons.arrow_back_ios, color: Colors.black45),

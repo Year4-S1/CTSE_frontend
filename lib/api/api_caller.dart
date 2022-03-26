@@ -22,7 +22,7 @@ class ApiCaller {
           allHeaders.addAll(headers);
         }
         print("Url: " + baseUrl + endpoint);
-
+        print(data);
         final response = await http
             .post(
               Uri.parse(baseUrl + endpoint),

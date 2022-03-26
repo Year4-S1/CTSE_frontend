@@ -37,21 +37,24 @@ class ApiCalls {
     }
   }
 
-  // static Future<ApiResponse> signOut({
-  //   required String token,
-  // }) async {
-  //   try {
-  //     Map<String, String> headers = new Map();
-  //     headers['x-access-token'] = token;
+  static Future<ApiResponse> forgotPassword({
+    required String token,
+    // required String oldPassword,
+    required String newPassword,
+  }) async {
+    try {
+      var raw = <String, String>{};
+      raw['token'] = token;
+      raw['password'] = newPassword;
 
-  //     return ApiCaller.postRequest('/api/users/logout', headers: headers);
-  //   } catch (e) {
-  //     ApiResponse response = ApiResponse();
-  //     response.isSuccess = false;
-  //     response.statusMessage = e.toString();
-  //     return response;
-  //   }
-  // }
+      return ApiCaller.postRequest('/user/update', data: raw);
+    } catch (e) {
+      ApiResponse response = ApiResponse();
+      response.isSuccess = false;
+      response.statusMessage = e.toString();
+      return response;
+    }
+  }
 
   static Future<ApiResponse> updateUser({
     required String token,
@@ -76,14 +79,13 @@ class ApiCalls {
   }
 
   static Future<ApiResponse> getCatagories({
-    required String token,
+    required String userId,
   }) async {
     try {
       Map<String, String> headers = {};
-      headers['x-access-token'] = token;
       headers["Accept"] = "multipart/form-data";
 
-      return ApiCaller.getRequest('/category/');
+      return ApiCaller.getRequest('/category/$userId');
     } catch (e) {
       ApiResponse response = ApiResponse();
       response.isSuccess = false;
@@ -94,10 +96,10 @@ class ApiCalls {
 
   static Future<ApiResponse> postCatagories({
     required Map<dynamic, dynamic> catagories,
-    required String token,
+    required String userId,
   }) async {
     try {
-      var raw = <String, dynamic>{"token": token, "data": catagories};
+      var raw = <String, dynamic>{"id": userId, "data": catagories};
 
       return ApiCaller.postRequest('/category/create', data: raw);
     } catch (e) {
@@ -108,19 +110,37 @@ class ApiCalls {
     }
   }
 
-  static Future<ApiResponse> updateCatagories({
-    required Map<dynamic, dynamic> catagories,
-    required String token,
+  static Future<ApiResponse> postNote({
+    required String catagoryColor,
+    required String userId,
+    required String noteTitle,
+    required String noteMessage,
   }) async {
     try {
-      var raw = <String, dynamic>{};
-      raw["data"] = catagories;
+      var raw = <String, dynamic>{
+        "userId": userId,
+        "categoryColor": catagoryColor,
+        "noteTitle": noteTitle,
+        "noteMessage": noteMessage,
+      };
 
+      return ApiCaller.postRequest('/note/create', data: raw);
+    } catch (e) {
+      ApiResponse response = ApiResponse();
+      response.isSuccess = false;
+      response.statusMessage = e.toString();
+      return response;
+    }
+  }
+
+  static Future<ApiResponse> getNotes({
+    required String userId,
+  }) async {
+    try {
       Map<String, String> headers = {};
-      headers['x-access-token'] = token;
+      headers["Accept"] = "multipart/form-data";
 
-      return ApiCaller.putRequest('/category/updatecategory/',
-          data: raw, headers: headers);
+      return ApiCaller.getRequest('/note/userid/$userId');
     } catch (e) {
       ApiResponse response = ApiResponse();
       response.isSuccess = false;
