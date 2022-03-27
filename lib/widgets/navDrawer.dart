@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/api/api_calls.dart';
 import 'package:notes_app/screens/catagories/catagoryMenu.dart';
+import 'package:notes_app/screens/home.dart';
 import 'package:notes_app/screens/onBoarding/login.dart';
 import 'package:notes_app/utils/settings.dart';
 import 'package:notes_app/widgets/dialog/loadingDialog.dart';
@@ -20,6 +21,7 @@ class _NavDrawerScreen extends State<NavDrawer> {
   bool shouldPop = true;
   bool loaded = false;
   String? userId;
+  double allNoteCount = 0;
 
   @override
   void initState() {
@@ -33,9 +35,23 @@ class _NavDrawerScreen extends State<NavDrawer> {
 
     catagoryList = res.jsonBody;
 
+    for (int i = 0; i < catagoryList['data'].length; i++) {
+      allNoteCount = allNoteCount + catagoryList['data'][i]['noteCount'];
+    }
+
     setState(() {
       loaded = true;
     });
+  }
+
+  activeCatagorySetter(String catageory) async {
+    await Settings.setActiveCategory(catageory);
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(),
+      ),
+    );
   }
 
   logout() async {
@@ -78,11 +94,11 @@ class _NavDrawerScreen extends State<NavDrawer> {
               'All notes',
               style: SubHeadStyle,
             ),
-            trailing: const Text(
-              "2",
+            trailing: Text(
+              allNoteCount.toInt().toString(),
               style: SubHeadStyle,
             ),
-            onTap: () => {},
+            onTap: () => {activeCatagorySetter("all")},
           ),
           Container(
             height: 10,
@@ -129,15 +145,22 @@ class _NavDrawerScreen extends State<NavDrawer> {
                             onPressed: () {}),
                         title: Text(
                           catagoryList['data'][index]['categoryName']
-                              .toString(),
+                                      .toString() ==
+                                  ""
+                              ? "Unassigned"
+                              : catagoryList['data'][index]['categoryName']
+                                  .toString(),
                           overflow: TextOverflow.ellipsis,
                           style: SubHeadStyle,
                         ),
-                        trailing: const Text(
-                          "0",
+                        trailing: Text(
+                          catagoryList['data'][index]['noteCount'].toString(),
                           style: SubHeadStyle,
                         ),
-                        onTap: () => {},
+                        onTap: () {
+                          activeCatagorySetter(
+                              catagoryList['data'][index]['categoryColor']);
+                        },
                       );
                     },
                   )
@@ -184,7 +207,7 @@ class _NavDrawerScreen extends State<NavDrawer> {
       case "orange":
         return catagoryOrange;
       default:
-        return Colors.black26;
+        return catagoryUnassigned;
     }
   }
 }

@@ -1,7 +1,10 @@
 import 'package:notes_app/api/api_calls.dart';
+import 'package:notes_app/utils/helper.dart';
 import 'package:notes_app/utils/settings.dart';
 import 'package:notes_app/widgets/custom_textbox.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
+import '../../screens/home.dart';
 import '../../styles.dart';
 
 updatePasswordPopup(BuildContext context, TextEditingController oldPassword,
@@ -11,22 +14,32 @@ updatePasswordPopup(BuildContext context, TextEditingController oldPassword,
   final formKey = GlobalKey<FormState>();
   String token;
 
-  update(String newPassword) async {
+  clear() {
+    oldPassword.text = "";
+    newPassword.text = "";
+  }
+
+  update(String newPassword, String oldPassword) async {
     token = (await Settings.getAccessToken())!;
 
     if (formKey.currentState!.validate()) {
-      final response =
-          await ApiCalls.forgotPassword(token: token, newPassword: newPassword);
+      final response = await ApiCalls.forgotPassword(
+          token: token, oldPassword: oldPassword, newPassword: newPassword);
 
       var json = response.jsonBody;
 
       if (response.isSuccess) {
-        if (json['message'] == "OTP Sent") {
-        } else {
-          //
-        }
+        Navigator.push(
+            context,
+            PageTransition(
+                type: PageTransitionType.bottomToTop, child: HomeScreen()));
+        snackBar("Successful", context);
+      } else {
+        Navigator.pop(context);
+        snackBar("Failed, check password", context);
       }
     }
+    clear();
   }
 
   showDialog(
@@ -106,7 +119,7 @@ updatePasswordPopup(BuildContext context, TextEditingController oldPassword,
                     ),
                     GestureDetector(
                       onTap: () {
-                        update(newPassword.text);
+                        update(newPassword.text, oldPassword.text);
                       },
                       child: Container(
                           width: 140,

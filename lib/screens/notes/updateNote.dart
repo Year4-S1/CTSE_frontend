@@ -10,11 +10,16 @@ import 'package:page_transition/page_transition.dart';
 import '../../styles.dart';
 import '../../widgets/dialog/saveDiscardPopup.dart';
 
-class NewNote extends StatefulWidget {
-  _NewNoteState createState() => _NewNoteState();
+class UpdateNote extends StatefulWidget {
+  var noteDetails;
+
+  UpdateNote({
+    required this.noteDetails,
+  });
+  _UpdateNoteState createState() => _UpdateNoteState();
 }
 
-class _NewNoteState extends State<NewNote> {
+class _UpdateNoteState extends State<UpdateNote> {
   TextEditingController titleController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
 
@@ -28,6 +33,7 @@ class _NewNoteState extends State<NewNote> {
   bool loaded = false;
   bool _valueSet = false;
   String? userId;
+  String? noteId;
 
   @override
   void initState() {
@@ -36,27 +42,34 @@ class _NewNoteState extends State<NewNote> {
   }
 
   getData() async {
+    print(widget.noteDetails);
     userId = await Settings.getUserID();
     var res = await ApiCalls.getCatagories(userId: userId!);
 
     _catagoryList = res.jsonBody;
 
     setState(() {
+      _valueSet = true;
+      _catagorySelected = widget.noteDetails['categoryColor'];
+      titleController.text = widget.noteDetails['noteTitle'];
+      bodyController.text = widget.noteDetails['noteMessage'];
+      noteId = widget.noteDetails['_id'];
+
       loaded = true;
     });
   }
 
-  postNote() async {
+  updateNote() async {
     setState(() {
       loaded = false;
     });
+
     if (bodyController.text != "") {
-      var res = await ApiCalls.postNote(
-          userId: userId!,
-          catagoryColor:
-              _catagorySelected == "" ? "unassigned" : _catagorySelected.trim(),
-          noteMessage: bodyController.text,
-          noteTitle: titleController.text);
+      var res = await ApiCalls.updateNote(
+          noteId: noteId!,
+          catagoryColor: _catagorySelected.trim(),
+          noteMessage: bodyController.text.trim(),
+          noteTitle: titleController.text.trim());
 
       var response = res.jsonBody;
 
@@ -76,6 +89,32 @@ class _NewNoteState extends State<NewNote> {
     }
   }
 
+  discardNote() async {
+    setState(() {
+      loaded = false;
+    });
+
+    var res = await ApiCalls.deletNote(
+      noteId: noteId!,
+    );
+
+    var response = res.jsonBody;
+
+    setState(() {
+      loaded = true;
+    });
+
+    if (res.isSuccess) {
+      snackBar("Deleted");
+      Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.bottomToTop, child: HomeScreen()));
+    } else {
+      snackBar("Something went wrong");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -89,17 +128,17 @@ class _NewNoteState extends State<NewNote> {
           logo: true,
           rightIcon: "save",
           backOnPress: () {
-            saveDiscardPopup(context, postNote, discardNote);
+            saveDiscardPopup(context, updateNote, discardNote);
           },
           rightOnPress: () {
-            postNote();
+            updateNote();
           },
           navLocation: HomeScreen(),
         ),
       ),
       body: WillPopScope(
         onWillPop: () async {
-          return !await saveDiscardPopup(context, postNote, discardNote);
+          return !await saveDiscardPopup(context, updateNote, discardNote);
         },
         child: loaded
             ? GestureDetector(
@@ -312,13 +351,6 @@ class _NewNoteState extends State<NewNote> {
         },
       ),
     );
-  }
-
-  discardNote() async {
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.bottomToTop, child: HomeScreen()));
   }
 
   iconColorSetter(String color) {

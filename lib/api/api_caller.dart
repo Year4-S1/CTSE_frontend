@@ -18,11 +18,11 @@ class ApiCaller {
         Map<String, String> allHeaders = new Map();
         allHeaders["Accept"] = "application/json";
         allHeaders["Content-Type"] = "application/json; charset=UTF-8";
-        if (headers != null && headers.length > 0) {
+        if (headers != null && headers.isNotEmpty) {
           allHeaders.addAll(headers);
         }
         print("Url: " + baseUrl + endpoint);
-        print(data);
+
         final response = await http
             .post(
               Uri.parse(baseUrl + endpoint),
@@ -62,19 +62,19 @@ class ApiCaller {
       var connectivityResult = await (Connectivity().checkConnectivity());
       if (connectivityResult == ConnectivityResult.mobile ||
           connectivityResult == ConnectivityResult.wifi) {
-        Map<String, String> allHeaders = new Map();
+        Map<String, String> allHeaders = {};
         allHeaders["Accept"] = "application/json";
-        if (headers != null && headers.length > 0) {
+        allHeaders["Content-Type"] = "application/json; charset=UTF-8";
+        if (headers != null && headers.isNotEmpty) {
           allHeaders.addAll(headers);
         }
         print("Url: " + baseUrl + endpoint);
-        // print(data);
 
         final response = await http
             .put(
               Uri.parse(baseUrl + endpoint),
               headers: allHeaders,
-              body: data,
+              body: json.encode(data),
             )
             .timeout(const Duration(seconds: timeout));
 

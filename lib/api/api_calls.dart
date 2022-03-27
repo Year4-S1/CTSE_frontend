@@ -39,37 +39,16 @@ class ApiCalls {
 
   static Future<ApiResponse> forgotPassword({
     required String token,
-    // required String oldPassword,
+    required String oldPassword,
     required String newPassword,
   }) async {
     try {
       var raw = <String, String>{};
       raw['token'] = token;
-      raw['password'] = newPassword;
+      raw['oldPassword'] = oldPassword;
+      raw['newPassword'] = newPassword;
 
       return ApiCaller.postRequest('/user/update', data: raw);
-    } catch (e) {
-      ApiResponse response = ApiResponse();
-      response.isSuccess = false;
-      response.statusMessage = e.toString();
-      return response;
-    }
-  }
-
-  static Future<ApiResponse> updateUser({
-    required String token,
-    required String id,
-    required String password,
-  }) async {
-    try {
-      var raw = <String, dynamic>{};
-      raw["password"] = password;
-
-      Map<String, String> headers = {};
-      headers['x-access-token'] = token;
-
-      return ApiCaller.postRequest('/api/users/$id',
-          data: raw, headers: headers);
     } catch (e) {
       ApiResponse response = ApiResponse();
       response.isSuccess = false;
@@ -133,6 +112,28 @@ class ApiCalls {
     }
   }
 
+  static Future<ApiResponse> updateNote({
+    required String catagoryColor,
+    required String noteId,
+    required String noteTitle,
+    required String noteMessage,
+  }) async {
+    try {
+      var raw = <String, dynamic>{
+        "categoryColor": catagoryColor,
+        "noteTitle": noteTitle,
+        "noteMessage": noteMessage,
+      };
+
+      return ApiCaller.putRequest('/note/updatenote/$noteId', data: raw);
+    } catch (e) {
+      ApiResponse response = ApiResponse();
+      response.isSuccess = false;
+      response.statusMessage = e.toString();
+      return response;
+    }
+  }
+
   static Future<ApiResponse> getNotes({
     required String userId,
   }) async {
@@ -141,6 +142,19 @@ class ApiCalls {
       headers["Accept"] = "multipart/form-data";
 
       return ApiCaller.getRequest('/note/userid/$userId');
+    } catch (e) {
+      ApiResponse response = ApiResponse();
+      response.isSuccess = false;
+      response.statusMessage = e.toString();
+      return response;
+    }
+  }
+
+  static Future<ApiResponse> deletNote({
+    required String noteId,
+  }) async {
+    try {
+      return ApiCaller.deleteRequest('/note/deletenote/$noteId');
     } catch (e) {
       ApiResponse response = ApiResponse();
       response.isSuccess = false;

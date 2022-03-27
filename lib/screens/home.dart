@@ -1,5 +1,6 @@
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:notes_app/api/api_calls.dart';
+import 'package:notes_app/screens/notes/updateNote.dart';
 import 'package:notes_app/utils/settings.dart';
 import 'package:notes_app/widgets/custom_appbar.dart';
 import 'package:notes_app/widgets/dialog/loadingDialog.dart';
@@ -21,16 +22,10 @@ class _HomeScreenState extends State<HomeScreen> {
   bool shouldPop = false; //to make sure can't go back
   bool? signed = false;
   String? userId;
+  String? activeCategory;
   bool loaded = false;
 
-  List<String> itemListTest = [
-    "Item 1",
-    "Item 2 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum lobortis tempus lectus. Phasellus scelerisque tortor elit, vel pellentesque augue maximus id. ",
-    "Item 3 Proin nec lacus in nisi gravida lacinia. Nam rhoncus, dolor ac imperdiet cursus, purus dui auctor mi, sit amet placerat ex est tempor metus. Suspendisse in faucibus urna. In sollicitudin egestas eros vitae sodales. Sed sed placerat lorem, eu tincidunt nisl. Etiam dolor felis, posuere eget massa et, porttitor sodales quam. Mauris finibus tristique nisl sed volutpat. Donec nulla tellus, molestie vitae vulputate sit amet, faucibus sit amet sem. Aliquam",
-    "Item 4 aliquam, bibendum quam nec, iaculis odio. Ut sed ullamcorper felis. Morbi tincidunt elit ac erat ornare sodales sit amet vestibulum ante. Ut sapien erat, dignissim",
-    "Item 5 Sed condimentum "
-  ];
-  Map<String, dynamic> noteList = {};
+  List noteList = [];
 
   @override
   void initState() {
@@ -41,16 +36,26 @@ class _HomeScreenState extends State<HomeScreen> {
   getNotes() async {
     setState(() {
       loaded = false;
+      noteList.clear();
     });
 
     signed = await Settings.getSigned();
     userId = await Settings.getUserID();
+    activeCategory = await Settings.getActiveCategory();
 
     var res = await ApiCalls.getNotes(userId: userId!);
 
-    noteList = res.jsonBody;
+    Map<String, dynamic> response = res.jsonBody;
 
-    print(noteList);
+    for (int i = 0; i < response['data'].length; i++) {
+      if (activeCategory == response['data'][i]['categoryColor']) {
+        noteList.add(response['data'][i]);
+      } else if (activeCategory == "all") {
+        noteList.add(response['data'][i]);
+      } else {
+        noteList.add(response['data'][i]);
+      }
+    }
 
     setState(() {
       loaded = true;
@@ -127,31 +132,59 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         body: TabBarView(children: [
-                          RefreshIndicator(
-                            onRefresh: _pullRefresh,
-                            child: Center(
-                              child: MasonryGridView.count(
-                                crossAxisCount: 2,
-                                itemCount: noteList['data'].length,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    margin: const EdgeInsets.all(5),
-                                    color: noteColorSetter(noteList['data']
-                                        [index]['categoryColor']),
-                                    padding: const EdgeInsets.all(10),
-                                    child: ConstrainedBox(
-                                      constraints: const BoxConstraints(
-                                        minHeight: 50.0,
-                                        maxHeight: 150.0,
+                          noteList.isNotEmpty
+                              ? RefreshIndicator(
+                                  onRefresh: _pullRefresh,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Center(
+                                      child: MasonryGridView.count(
+                                        crossAxisCount: 2,
+                                        itemCount: noteList.length,
+                                        itemBuilder: (context, index) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                  context,
+                                                  PageTransition(
+                                                      type: PageTransitionType
+                                                          .bottomToTop,
+                                                      child: UpdateNote(
+                                                        noteDetails:
+                                                            noteList[index],
+                                                      )));
+                                            },
+                                            child: Container(
+                                              margin: const EdgeInsets.all(5),
+                                              color: noteColorSetter(
+                                                  noteList[index]
+                                                      ['categoryColor']),
+                                              padding: const EdgeInsets.all(10),
+                                              child: ConstrainedBox(
+                                                constraints:
+                                                    const BoxConstraints(
+                                                  minHeight: 50.0,
+                                                  maxHeight: 150.0,
+                                                ),
+                                                child: Text(
+                                                    noteList[index]
+                                                        ['noteMessage'],
+                                                    textAlign:
+                                                        TextAlign.justify),
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       ),
-                                      child: Text(noteList['data'][index]
-                                          ['noteMessage']),
                                     ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
+                                  ),
+                                )
+                              : Center(
+                                  child: Text(
+                                    "No Notes",
+                                    style: greyNormalTextStyle,
+                                  ),
+                                ),
                           const Center(
                             child: Text("data 2"),
                           ),
@@ -179,12 +212,13 @@ class _HomeScreenState extends State<HomeScreen> {
       case "orange":
         return noteOrange;
       default:
-        return Colors.black26;
+        return noteUnassigned;
     }
   }
 
   Future<void> _pullRefresh() async {
-    getNotes();
-    setState(() {});
+    setState(() {
+      getNotes();
+    });
   }
 }

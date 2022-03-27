@@ -1,9 +1,8 @@
-import 'package:page_transition/page_transition.dart';
 import 'package:flutter/material.dart';
-import '../../screens/home.dart';
 import '../../styles.dart';
 
-saveDiscardPopup(BuildContext context) {
+saveDiscardPopup(
+    BuildContext context, dynamic Function() save, dynamic Function() discard) {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -38,19 +37,14 @@ saveDiscardPopup(BuildContext context) {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                type: PageTransitionType.topToBottom,
-                                child: HomeScreen()));
-                      },
+                      onTap: discard,
                       child: Container(
                           width: 140,
                           alignment: Alignment.center,
                           child: Text("Discard", style: greyNormalTextStyle)),
                     ),
                     GestureDetector(
+                      onTap: save,
                       child: Container(
                           width: 140,
                           alignment: Alignment.center,

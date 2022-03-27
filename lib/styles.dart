@@ -12,6 +12,7 @@ const catagoryBlue = Color.fromARGB(255, 86, 160, 240);
 const catagoryGreen = Color.fromARGB(255, 152, 219, 19);
 const catagoryYellow = Color.fromARGB(255, 235, 196, 23);
 const catagoryOrange = Color.fromARGB(255, 226, 109, 31);
+const catagoryUnassigned = Colors.black26;
 
 // Noted colors
 const notePink = Color(0xFFFFCFE0);
@@ -20,6 +21,7 @@ const noteBlue = Color(0xFFA7CDF5);
 const noteGreen = Color(0xFFD9F79D);
 const noteYellow = Color(0xFFF9F192);
 const noteOrange = Color(0xFFF7C990);
+const noteUnassigned = Colors.black12;
 
 //Fonts and text
 const String defaultFont = 'Josefin Sans';
