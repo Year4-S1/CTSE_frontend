@@ -15,21 +15,22 @@ class CustomTextBoxBorderLess extends StatelessWidget {
   String? errorText;
   Widget? prifixIcon;
   bool obscureText;
+  InputBorder? border;
 
-  CustomTextBoxBorderLess({
-    required this.controller,
-    this.textCapitalization = TextCapitalization.none,
-    this.keyboardType = TextInputType.text,
-    this.phoneNumber = false,
-    this.readOnly = false,
-    this.enabled = true,
-    this.minLine = 1,
-    this.maxLine = 1,
-    this.labelText,
-    this.errorText,
-    this.prifixIcon,
-    this.obscureText = false,
-  });
+  CustomTextBoxBorderLess(
+      {required this.controller,
+      this.textCapitalization = TextCapitalization.none,
+      this.keyboardType = TextInputType.text,
+      this.phoneNumber = false,
+      this.readOnly = false,
+      this.enabled = true,
+      this.minLine = 1,
+      this.maxLine = 1,
+      this.labelText,
+      this.errorText,
+      this.prifixIcon,
+      this.obscureText = false,
+      this.border});
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +49,7 @@ class CustomTextBoxBorderLess extends StatelessWidget {
           readOnly: readOnly,
           decoration: InputDecoration(
             filled: true,
+            border: border,
             fillColor: Colors.grey[50],
             labelText: labelText,
             labelStyle: LabelStyle1,

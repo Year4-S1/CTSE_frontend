@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../styles.dart';
 
-saveDiscardPopup(
-    BuildContext context, dynamic Function() save, dynamic Function() discard) {
+saveDiscardPopup(BuildContext context, String type, dynamic Function() save,
+    dynamic Function() discard) {
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -23,10 +23,10 @@ saveDiscardPopup(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(top: 40),
                 child: Text(
-                  "Discard Note?",
+                  'Discard $type?',
                   style: LogOut,
                 ),
               ),

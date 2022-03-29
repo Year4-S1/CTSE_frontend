@@ -48,7 +48,7 @@ class ApiCalls {
       raw['oldPassword'] = oldPassword;
       raw['newPassword'] = newPassword;
 
-      return ApiCaller.postRequest('/user/update', data: raw);
+      return ApiCaller.putRequest('/user/update', data: raw);
     } catch (e) {
       ApiResponse response = ApiResponse();
       response.isSuccess = false;
@@ -81,6 +81,22 @@ class ApiCalls {
       var raw = <String, dynamic>{"id": userId, "data": catagories};
 
       return ApiCaller.postRequest('/category/create', data: raw);
+    } catch (e) {
+      ApiResponse response = ApiResponse();
+      response.isSuccess = false;
+      response.statusMessage = e.toString();
+      return response;
+    }
+  }
+
+  static Future<ApiResponse> getNotes({
+    required String userId,
+  }) async {
+    try {
+      Map<String, String> headers = {};
+      headers["Accept"] = "multipart/form-data";
+
+      return ApiCaller.getRequest('/note/userid/$userId');
     } catch (e) {
       ApiResponse response = ApiResponse();
       response.isSuccess = false;
@@ -134,14 +150,11 @@ class ApiCalls {
     }
   }
 
-  static Future<ApiResponse> getNotes({
-    required String userId,
+  static Future<ApiResponse> deletNote({
+    required String noteId,
   }) async {
     try {
-      Map<String, String> headers = {};
-      headers["Accept"] = "multipart/form-data";
-
-      return ApiCaller.getRequest('/note/userid/$userId');
+      return ApiCaller.deleteRequest('/note/deletenote/$noteId');
     } catch (e) {
       ApiResponse response = ApiResponse();
       response.isSuccess = false;
@@ -150,11 +163,103 @@ class ApiCalls {
     }
   }
 
-  static Future<ApiResponse> deletNote({
-    required String noteId,
+  static Future<ApiResponse> getTodos({
+    required String userId,
   }) async {
     try {
-      return ApiCaller.deleteRequest('/note/deletenote/$noteId');
+      Map<String, String> headers = {};
+      headers["Accept"] = "multipart/form-data";
+
+      return ApiCaller.getRequest('/reminder/userid/$userId');
+    } catch (e) {
+      ApiResponse response = ApiResponse();
+      response.isSuccess = false;
+      response.statusMessage = e.toString();
+      return response;
+    }
+  }
+
+  static Future<ApiResponse> postTodo({
+    required String catagoryColor,
+    required String userId,
+    required String todoTitle,
+    String? todoRemakrs,
+    String? reminderDate,
+    String? reminderTime,
+  }) async {
+    try {
+      var raw = <String, dynamic>{
+        "userId": userId,
+        "categoryColor": catagoryColor,
+        "reminderTitle": todoTitle,
+        "reminderMessage": todoRemakrs,
+        "reminderDate": reminderDate,
+        "reminderTime": reminderTime
+      };
+
+      return ApiCaller.postRequest('/reminder/create', data: raw);
+    } catch (e) {
+      ApiResponse response = ApiResponse();
+      response.isSuccess = false;
+      response.statusMessage = e.toString();
+      return response;
+    }
+  }
+
+  static Future<ApiResponse> todoActiveSetter({
+    required String userId,
+    required String todoId,
+    required bool active,
+  }) async {
+    try {
+      var raw = <String, dynamic>{
+        "userId": userId,
+        "reminderId": todoId,
+        "activeStatus": active,
+      };
+
+      return ApiCaller.putRequest('/reminder/create/active', data: raw);
+    } catch (e) {
+      ApiResponse response = ApiResponse();
+      response.isSuccess = false;
+      response.statusMessage = e.toString();
+      return response;
+    }
+  }
+
+  static Future<ApiResponse> updateTodo({
+    required String userId,
+    required String todoId,
+    required String todoTitle,
+    required String catagoryColor,
+    String? todoRemakrs,
+    String? reminderDate,
+    String? reminderTime,
+  }) async {
+    try {
+      var raw = <String, dynamic>{
+        "userId": userId,
+        "categoryColor": catagoryColor,
+        "reminderTitle": todoTitle,
+        "reminderMessage": todoRemakrs,
+        "reminderDate": reminderDate,
+        "reminderTime": reminderTime
+      };
+
+      return ApiCaller.putRequest('/reminder/update/$todoId', data: raw);
+    } catch (e) {
+      ApiResponse response = ApiResponse();
+      response.isSuccess = false;
+      response.statusMessage = e.toString();
+      return response;
+    }
+  }
+
+  static Future<ApiResponse> deleteTodo({
+    required String todoId,
+  }) async {
+    try {
+      return ApiCaller.deleteRequest('/reminder/delete/$todoId');
     } catch (e) {
       ApiResponse response = ApiResponse();
       response.isSuccess = false;

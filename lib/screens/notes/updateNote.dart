@@ -8,6 +8,7 @@ import 'package:notes_app/widgets/dialog/loadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../styles.dart';
+import '../../utils/helper.dart';
 import '../../widgets/dialog/saveDiscardPopup.dart';
 
 class UpdateNote extends StatefulWidget {
@@ -78,13 +79,13 @@ class _UpdateNoteState extends State<UpdateNote> {
       });
 
       if (res.isSuccess) {
-        snackBar("Saved");
+        snackBar("Saved", context);
         Navigator.push(
             context,
             PageTransition(
                 type: PageTransitionType.bottomToTop, child: HomeScreen()));
       } else {
-        snackBar("Something went wrong");
+        snackBar("Something went wrong", context);
       }
     }
   }
@@ -105,13 +106,13 @@ class _UpdateNoteState extends State<UpdateNote> {
     });
 
     if (res.isSuccess) {
-      snackBar("Deleted");
+      snackBar("Deleted", context);
       Navigator.push(
           context,
           PageTransition(
               type: PageTransitionType.bottomToTop, child: HomeScreen()));
     } else {
-      snackBar("Something went wrong");
+      snackBar("Something went wrong", context);
     }
   }
 
@@ -128,7 +129,7 @@ class _UpdateNoteState extends State<UpdateNote> {
           logo: true,
           rightIcon: "save",
           backOnPress: () {
-            saveDiscardPopup(context, updateNote, discardNote);
+            saveDiscardPopup(context, "Note", updateNote, discardNote);
           },
           rightOnPress: () {
             updateNote();
@@ -138,7 +139,8 @@ class _UpdateNoteState extends State<UpdateNote> {
       ),
       body: WillPopScope(
         onWillPop: () async {
-          return !await saveDiscardPopup(context, updateNote, discardNote);
+          return !await saveDiscardPopup(
+              context, "Note", updateNote, discardNote);
         },
         child: loaded
             ? GestureDetector(
@@ -349,34 +351,6 @@ class _UpdateNoteState extends State<UpdateNote> {
             },
           );
         },
-      ),
-    );
-  }
-
-  iconColorSetter(String color) {
-    switch (color) {
-      case "pink":
-        return catagoryPink;
-      case "purple":
-        return catagoryPurple;
-      case "blue":
-        return catagoryBlue;
-      case "green":
-        return catagoryGreen;
-      case "yellow":
-        return catagoryYellow;
-      case "orange":
-        return catagoryOrange;
-      default:
-        return catagoryUnassigned;
-    }
-  }
-
-  snackBar(String? message) {
-    return ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message!),
-        duration: const Duration(seconds: 2),
       ),
     );
   }

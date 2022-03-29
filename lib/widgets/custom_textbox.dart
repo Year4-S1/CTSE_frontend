@@ -65,7 +65,7 @@ class CustomTextBox extends StatelessWidget {
       Container(
         // margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
         child: TextFormField(
-          style: greyNormalTextStyle,
+          style: const TextStyle(fontSize: 18.0, fontFamily: defaultFont),
           maxLines: maxLine,
           minLines: minLine,
           keyboardType: keyboardType,
@@ -86,15 +86,15 @@ class CustomTextBox extends StatelessWidget {
             // border: InputBorder.none,
             enabledBorder: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                borderSide: BorderSide(color: Colors.black26, width: 2.0)),
+                borderSide: BorderSide(color: Colors.black12, width: 2.0)),
             errorBorder: errorBorder,
             disabledBorder: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                borderSide: BorderSide(color: Colors.black26, width: 2.0)),
+                borderSide: BorderSide(color: Colors.black12, width: 2.0)),
             focusedErrorBorder: errorBorder,
             focusedBorder: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
-                borderSide: BorderSide(color: Colors.black26, width: 2.0)),
+                borderSide: BorderSide(color: Colors.black12, width: 2.0)),
             enabled: enabled,
           ),
         ),

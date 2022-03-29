@@ -89,6 +89,12 @@ const LogOut = TextStyle(
     fontWeight: FontWeight.w600,
     fontSize: 18.0);
 
+const DeleteStyle = TextStyle(
+    fontFamily: defaultFont,
+    color: Color.fromARGB(255, 255, 255, 255),
+    fontWeight: FontWeight.w600,
+    fontSize: 18.0);
+
 const TextButtonStyle = TextStyle(
   fontFamily: defaultFont,
   color: Color(0xFFAFB0B1),

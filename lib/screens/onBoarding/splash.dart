@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: Container(
+      child: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: Center(

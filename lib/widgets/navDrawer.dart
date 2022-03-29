@@ -8,6 +8,7 @@ import 'package:notes_app/widgets/dialog/loadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../styles.dart';
+import '../utils/helper.dart';
 
 class NavDrawer extends StatefulWidget {
   NavDrawer();
@@ -57,6 +58,7 @@ class _NavDrawerScreen extends State<NavDrawer> {
   logout() async {
     await Settings.setAccessToken("");
     await Settings.setUserID("");
+    await Settings.setSigned(false);
 
     Navigator.push(
         context,
@@ -190,24 +192,5 @@ class _NavDrawerScreen extends State<NavDrawer> {
         ],
       ),
     );
-  }
-
-  iconColorSetter(String color) {
-    switch (color) {
-      case "pink":
-        return catagoryPink;
-      case "purple":
-        return catagoryPurple;
-      case "blue":
-        return catagoryBlue;
-      case "green":
-        return catagoryGreen;
-      case "yellow":
-        return catagoryYellow;
-      case "orange":
-        return catagoryOrange;
-      default:
-        return catagoryUnassigned;
-    }
   }
 }

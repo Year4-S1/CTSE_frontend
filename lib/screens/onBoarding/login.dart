@@ -1,17 +1,12 @@
-import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:notes_app/screens/onBoarding/otp_verify.dart';
+import 'package:notes_app/widgets/dialog/loadingDialog.dart';
+import 'package:notes_app/widgets/custom_textbox.dart';
+import 'package:notes_app/widgets/custom_appbar.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:notes_app/api/api_calls.dart';
 import 'package:notes_app/screens/home.dart';
-import 'package:notes_app/screens/onBoarding/otp_verify.dart';
-import 'package:notes_app/widgets/custom_appbar.dart';
-import 'package:notes_app/widgets/custom_textbox.dart';
-import 'package:notes_app/widgets/dialog/loadingDialog.dart';
-import 'package:page_transition/page_transition.dart';
 import '../../widgets/custom_button.dart';
-import 'package:http/http.dart' as http;
-
+import 'package:flutter/material.dart';
 import '../../utils/settings.dart';
 
 class LoginScreen extends StatefulWidget {
