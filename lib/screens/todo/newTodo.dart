@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/api/api_calls.dart';
-import 'package:notes_app/screens/home.dart';
-import 'package:notes_app/utils/settings.dart';
-import 'package:notes_app/widgets/custom_appbar.dart';
-import 'package:notes_app/widgets/custom_datetime_picker.dart';
-import 'package:notes_app/widgets/custom_textbox_borderless.dart';
-import 'package:notes_app/widgets/dialog/loadingDialog.dart';
+import 'package:noteworthy/api/api_calls.dart';
+import 'package:noteworthy/screens/home.dart';
+import 'package:noteworthy/utils/settings.dart';
+import 'package:noteworthy/widgets/custom_appbar.dart';
+import 'package:noteworthy/widgets/custom_datetime_picker.dart';
+import 'package:noteworthy/widgets/custom_textbox_borderless.dart';
+import 'package:noteworthy/widgets/dialog/loadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../styles.dart';

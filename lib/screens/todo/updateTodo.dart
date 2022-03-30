@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/api/api_calls.dart';
-import 'package:notes_app/screens/home.dart';
-import 'package:notes_app/utils/settings.dart';
-import 'package:notes_app/widgets/custom_appbar.dart';
-import 'package:notes_app/widgets/custom_datetime_picker.dart';
-import 'package:notes_app/widgets/custom_textbox_borderless.dart';
-import 'package:notes_app/widgets/dialog/loadingDialog.dart';
+import 'package:noteworthy/api/api_calls.dart';
+import 'package:noteworthy/screens/home.dart';
+import 'package:noteworthy/utils/settings.dart';
+import 'package:noteworthy/widgets/custom_appbar.dart';
+import 'package:noteworthy/widgets/custom_datetime_picker.dart';
+import 'package:noteworthy/widgets/custom_textbox_borderless.dart';
+import 'package:noteworthy/widgets/dialog/loadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 
 import '../../styles.dart';
@@ -37,6 +37,7 @@ class _UpdateTodoState extends State<UpdateTodo> {
   bool _valueSet = false;
   bool _reminderExpanded = false;
   bool _remarksExpanded = false;
+  bool activeStatus = true;
   String? userId;
   String? todoId;
 
@@ -59,6 +60,7 @@ class _UpdateTodoState extends State<UpdateTodo> {
       reminderDate.text = widget.todoDetails['reminderDate'];
       reminderTime.text = widget.todoDetails['reminderTime'];
       _catagorySelected = widget.todoDetails['categoryColor'];
+      activeStatus = widget.todoDetails['activeStatus'];
 
       reminderDate.text != ""
           ? _reminderExpanded = true
@@ -79,15 +81,15 @@ class _UpdateTodoState extends State<UpdateTodo> {
 
     if (titleController.text != "") {
       var res = await ApiCalls.updateTodo(
-        userId: userId!,
-        todoId: todoId!,
-        catagoryColor:
-            _catagorySelected == "" ? "unassigned" : _catagorySelected.trim(),
-        todoTitle: titleController.text,
-        todoRemakrs: _remarksExpanded ? remarksController.text : "",
-        reminderDate: _reminderExpanded ? reminderDate.text : "",
-        reminderTime: _reminderExpanded ? reminderTime.text : "",
-      );
+          userId: userId!,
+          todoId: todoId!,
+          catagoryColor:
+              _catagorySelected == "" ? "unassigned" : _catagorySelected.trim(),
+          todoTitle: titleController.text,
+          todoRemakrs: _remarksExpanded ? remarksController.text : "",
+          reminderDate: _reminderExpanded ? reminderDate.text : "",
+          reminderTime: _reminderExpanded ? reminderTime.text : "",
+          activeStatus: activeStatus);
 
       var response = res.jsonBody;
 

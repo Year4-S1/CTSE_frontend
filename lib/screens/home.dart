@@ -1,15 +1,15 @@
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:notes_app/screens/todo/updateTodo.dart';
-import 'package:notes_app/widgets/dialog/loadingDialog.dart';
-import 'package:notes_app/screens/notes/updateNote.dart';
-import 'package:notes_app/widgets/custom_appbar.dart';
+import 'package:noteworthy/screens/todo/updateTodo.dart';
+import 'package:noteworthy/widgets/dialog/loadingDialog.dart';
+import 'package:noteworthy/screens/notes/updateNote.dart';
+import 'package:noteworthy/widgets/custom_appbar.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:notes_app/screens/todo/newTodo.dart';
-import 'package:notes_app/widgets/custom_tile.dart';
-import 'package:notes_app/widgets/navDrawer.dart';
-import 'package:notes_app/utils/settings.dart';
+import 'package:noteworthy/screens/todo/newTodo.dart';
+import 'package:noteworthy/widgets/custom_tile.dart';
+import 'package:noteworthy/widgets/navDrawer.dart';
+import 'package:noteworthy/utils/settings.dart';
 import '../widgets/dialog/updatePassword.dart';
-import 'package:notes_app/api/api_calls.dart';
+import 'package:noteworthy/api/api_calls.dart';
 import 'package:flutter/material.dart';
 import '../utils/helper.dart';
 import 'notes/newNote.dart';
@@ -44,7 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
     getNotes();
     getTodos();
 
-    tabSetter = widget.tab!;
+    if (widget.tab != null) {
+      tabSetter = widget.tab!;
+    }
     super.initState();
   }
 
@@ -260,9 +262,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     )
-                  : Text(
-                      "No Notes",
-                      style: greyNormalTextStyle,
+                  : SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Center(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height - 200,
+                          child: Center(
+                            child: Text(
+                              "No Notes",
+                              style: greyNormalTextStyle,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
             )
           : loadingDialog(context),

@@ -1,6 +1,6 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
-import 'package:notes_app/widgets/custom_textbox_borderless.dart';
+import 'package:noteworthy/widgets/custom_textbox_borderless.dart';
 
 import '../styles.dart';
 import 'package:flutter/material.dart';

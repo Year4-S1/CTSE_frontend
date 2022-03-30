@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:notes_app/screens/home.dart';
-import 'package:notes_app/screens/onBoarding/login.dart';
+import 'package:noteworthy/screens/home.dart';
+import 'package:noteworthy/screens/onBoarding/login.dart';
 
-import 'package:notes_app/styles.dart';
-import 'package:notes_app/utils/settings.dart';
+import 'package:noteworthy/styles.dart';
+import 'package:noteworthy/utils/settings.dart';
 
 class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();

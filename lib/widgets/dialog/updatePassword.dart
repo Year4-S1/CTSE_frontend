@@ -1,7 +1,7 @@
-import 'package:notes_app/api/api_calls.dart';
-import 'package:notes_app/utils/helper.dart';
-import 'package:notes_app/utils/settings.dart';
-import 'package:notes_app/widgets/custom_textbox.dart';
+import 'package:noteworthy/api/api_calls.dart';
+import 'package:noteworthy/utils/helper.dart';
+import 'package:noteworthy/utils/settings.dart';
+import 'package:noteworthy/widgets/custom_textbox.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import '../../screens/home.dart';

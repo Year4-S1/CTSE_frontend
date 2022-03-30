@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:notes_app/api/api_calls.dart';
-import 'package:notes_app/screens/home.dart';
-import 'package:notes_app/styles.dart';
-import 'package:notes_app/widgets/dialog/loadingDialog.dart';
+import 'package:noteworthy/api/api_calls.dart';
+import 'package:noteworthy/screens/home.dart';
+import 'package:noteworthy/styles.dart';
+import 'package:noteworthy/widgets/dialog/loadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';

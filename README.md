@@ -1,4 +1,4 @@
-# notes_app
+# noteworthy
 
 A new Flutter project.
 

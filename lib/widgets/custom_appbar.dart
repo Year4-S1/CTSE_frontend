@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/screens/home.dart';
+import 'package:noteworthy/screens/home.dart';
 import 'package:page_transition/page_transition.dart';
 import '../styles.dart';
 

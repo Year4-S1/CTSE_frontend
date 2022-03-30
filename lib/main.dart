@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/screens/onBoarding/splash.dart';
+import 'package:noteworthy/screens/onBoarding/splash.dart';
 
 void main() {
   runApp(MyApp());

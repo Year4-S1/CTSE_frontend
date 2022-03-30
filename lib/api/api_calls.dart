@@ -235,15 +235,17 @@ class ApiCalls {
     String? todoRemakrs,
     String? reminderDate,
     String? reminderTime,
+    bool? activeStatus,
   }) async {
     try {
       var raw = <String, dynamic>{
-        "userId": userId,
         "categoryColor": catagoryColor,
         "reminderTitle": todoTitle,
         "reminderMessage": todoRemakrs,
         "reminderDate": reminderDate,
-        "reminderTime": reminderTime
+        "reminderTime": reminderTime,
+        // "userId": userId,
+        // "activeStatus": activeStatus
       };
 
       return ApiCaller.putRequest('/reminder/update/$todoId', data: raw);

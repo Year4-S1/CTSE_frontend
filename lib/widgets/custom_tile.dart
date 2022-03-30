@@ -1,5 +1,5 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:notes_app/utils/helper.dart';
+import 'package:noteworthy/utils/helper.dart';
 
 import '../api/api_calls.dart';
 import '../styles.dart';
