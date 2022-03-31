@@ -209,10 +209,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  body: TabBarView(children: [
-                    notesBuilder(),
-                    todoBuilder(),
-                  ]),
+                  body: TabBarView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        notesBuilder(),
+                        todoBuilder(),
+                      ]),
                 ),
               )),
         ),
@@ -251,7 +253,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: ConstrainedBox(
                                   constraints: const BoxConstraints(
                                     minHeight: 50.0,
-                                    maxHeight: 150.0,
+                                    maxHeight: 140.0,
                                   ),
                                   child: Text(noteList[index]['noteMessage'],
                                       textAlign: TextAlign.left),

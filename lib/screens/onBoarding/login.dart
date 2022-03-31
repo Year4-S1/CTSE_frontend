@@ -5,6 +5,7 @@ import 'package:noteworthy/widgets/custom_appbar.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:noteworthy/api/api_calls.dart';
 import 'package:noteworthy/screens/home.dart';
+import '../../styles.dart';
 import '../../widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import '../../utils/settings.dart';
@@ -99,6 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ? Container(
                   height: height,
                   width: width,
+                  color: whiteColor,
                   padding: const EdgeInsets.all(20),
                   alignment: Alignment.center,
                   child: SingleChildScrollView(

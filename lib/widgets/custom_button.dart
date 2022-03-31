@@ -31,14 +31,6 @@ class _CustomButtonScreen extends State<CustomButton> {
             border: Border.all(color: Colors.blueAccent, width: 2),
             borderRadius: const BorderRadius.all(Radius.circular(20)),
             color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.3),
-                spreadRadius: 5,
-                blurRadius: 5,
-                offset: const Offset(0, 0),
-              ),
-            ],
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 13),

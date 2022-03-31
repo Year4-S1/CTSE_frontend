@@ -37,7 +37,8 @@ class _CustomAppbarWidgetState extends State<CustomAppbarWidget> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: whiteColor,
+      foregroundColor: whiteColor,
       leading: leadingButton(widget.leading, context, widget.drawerKey,
           widget.navLocation!, widget.rightIcon, widget.backOnPress),
       actions: [
@@ -49,7 +50,7 @@ class _CustomAppbarWidgetState extends State<CustomAppbarWidget> {
       ],
       title: widget.logo
           ? const Padding(
-              padding: EdgeInsets.only(left: 50),
+              padding: EdgeInsets.only(left: 60),
               child: Text("Noteworthy", style: LogoText),
             )
           : Text(
