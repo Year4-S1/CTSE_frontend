@@ -91,29 +91,10 @@ class _UpdateNoteState extends State<UpdateNote> {
   }
 
   discardNote() async {
-    setState(() {
-      loaded = false;
-    });
-
-    var res = await ApiCalls.deletNote(
-      noteId: noteId!,
-    );
-
-    var response = res.jsonBody;
-
-    setState(() {
-      loaded = true;
-    });
-
-    if (res.isSuccess) {
-      snackBar("Deleted", context);
-      Navigator.push(
-          context,
-          PageTransition(
-              type: PageTransitionType.bottomToTop, child: HomeScreen()));
-    } else {
-      snackBar("Something went wrong", context);
-    }
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.bottomToTop, child: HomeScreen()));
   }
 
   @override
@@ -127,7 +108,7 @@ class _UpdateNoteState extends State<UpdateNote> {
           mainTitle: "Noteworthy",
           leading: "Back",
           logo: true,
-          rightIcon: "save",
+          rightIcon: "update",
           backOnPress: () {
             saveDiscardPopup(context, "Note", updateNote, discardNote);
           },

@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool? signed = false; //check if user is signed in
   bool _loaded = false; //to check if data is loaded to load body
 
-  String? activeCategory; //used to filter notes
+  String activeCategory = "all"; //used to filter notes
   String? userId;
 
   int tabSetter = 0; //tab state checker
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     signed = await Settings.getSigned();
     userId = await Settings.getUserID();
-    activeCategory = await Settings.getActiveCategory();
+    activeCategory = (await Settings.getActiveCategory())!;
 
     var res = await ApiCalls.getNotes(userId: userId!);
 
@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
       } else if (activeCategory == "all") {
         noteList.add(response['data'][i]);
       } else {
-        noteList.add(response['data'][i]);
+        null;
       }
     }
 
@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     signed = await Settings.getSigned();
     userId = await Settings.getUserID();
-    activeCategory = await Settings.getActiveCategory();
+    activeCategory = (await Settings.getActiveCategory())!;
 
     var res = await ApiCalls.getTodos(userId: userId!);
 

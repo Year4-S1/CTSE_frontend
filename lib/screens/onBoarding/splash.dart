@@ -20,9 +20,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   navChecker() async {
     bool? checker = await Settings.getSigned();
-    checker ??= false;
+    checker == null ? checker == false : null;
 
-    if (checker) {
+    if (checker!) {
       Future.delayed(const Duration(seconds: 5), () {
         Navigator.of(context).push(
           MaterialPageRoute(

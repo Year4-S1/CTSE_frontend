@@ -126,7 +126,7 @@ class _UpdateTodoState extends State<UpdateTodo> {
           mainTitle: "Noteworthy",
           leading: "Back",
           logo: true,
-          rightIcon: "save",
+          rightIcon: "update",
           backOnPress: () {
             saveDiscardPopup(context, "Todo", updateTodo, discardNote);
           },
@@ -392,11 +392,13 @@ class _UpdateTodoState extends State<UpdateTodo> {
 
   discardNote() async {
     Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.bottomToTop,
-            child: HomeScreen(
-              tab: 1,
-            )));
+      context,
+      PageTransition(
+        type: PageTransitionType.bottomToTop,
+        child: HomeScreen(
+          tab: 1,
+        ),
+      ),
+    );
   }
 }

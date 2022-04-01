@@ -6,7 +6,7 @@ import '../styles.dart';
 class CustomAppbarWidget extends StatefulWidget {
   String mainTitle = "Noteworthy";
   String leading; // leading icon
-  String rightIcon = "save"; //save || profile || ""
+  String rightIcon = "save"; //save || profile || update || ""
   bool logo; //middle logo
   Widget? navLocation; // back button nav
   void Function()? rightOnPress; // right action onpress
@@ -67,6 +67,14 @@ rightAction(String type, void Function()? onPress) {
       onTap: onPress,
       child: const Text(
         "Save",
+        style: SeeAllStyle,
+      ),
+    );
+  } else if (type == "update") {
+    return GestureDetector(
+      onTap: onPress,
+      child: const Text(
+        "Update",
         style: SeeAllStyle,
       ),
     );
