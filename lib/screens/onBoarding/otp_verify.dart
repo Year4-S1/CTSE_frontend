@@ -8,6 +8,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/helper.dart';
 import '../../utils/settings.dart';
 import '../../widgets/custom_appbar.dart';
 import '../../widgets/custom_button.dart';
@@ -15,8 +16,9 @@ import 'login.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   final String email;
+  final String password;
 
-  OtpVerifyScreen(this.email, {Key? key}) : super(key: key);
+  OtpVerifyScreen(this.email, this.password, {Key? key}) : super(key: key);
   @override
   _OtpVerifyScreen createState() => _OtpVerifyScreen();
 }
@@ -66,7 +68,7 @@ class _OtpVerifyScreen extends State<OtpVerifyScreen> {
           await Settings.setAccessToken(userId);
           await Settings.setUserEmail(widget.email);
 
-          snackBar("OTP Verified!!");
+          snackBar("OTP Verified!", context);
           Navigator.push(
             context,
             PageTransition(
@@ -74,8 +76,22 @@ class _OtpVerifyScreen extends State<OtpVerifyScreen> {
           );
         }
       } else {
-        snackBar("Something went wrong");
+        snackBar("Something went wrong", context);
       }
+    }
+  }
+
+  resendOtp() async {
+    snackBar("Processing", context);
+    final response =
+        await ApiCalls.signInUp(email: widget.email, password: widget.password);
+
+    var json = response.jsonBody;
+
+    if (json['message'] == "OTP Sent") {
+      snackBar("OTP sent!", context);
+    } else {
+      snackBar("Something went wrong", context);
     }
   }
 
@@ -171,13 +187,6 @@ class _OtpVerifyScreen extends State<OtpVerifyScreen> {
                             errorAnimationController: errorController,
                             controller: textEditingController,
                             keyboardType: TextInputType.number,
-                            boxShadows: const [
-                              BoxShadow(
-                                offset: Offset(0, 1),
-                                color: Colors.black12,
-                                blurRadius: 10,
-                              )
-                            ],
                             onCompleted: (v) {
                               print("Completed");
                             },
@@ -211,7 +220,9 @@ class _OtpVerifyScreen extends State<OtpVerifyScreen> {
                           style: TextStyle(color: Colors.black54, fontSize: 15),
                         ),
                         TextButton(
-                            onPressed: () => snackBar("OTP resend!!"),
+                            onPressed: () {
+                              resendOtp();
+                            },
                             child: const Text(
                               "RESEND",
                               style: TextStyle(
@@ -222,7 +233,7 @@ class _OtpVerifyScreen extends State<OtpVerifyScreen> {
                       ],
                     ),
                     const SizedBox(
-                      height: 40,
+                      height: 100,
                     ),
                     CustomButton(
                       text: "Done",
@@ -247,15 +258,6 @@ class _OtpVerifyScreen extends State<OtpVerifyScreen> {
                 ),
               )
             : loadingDialog(context),
-      ),
-    );
-  }
-
-  snackBar(String? message) {
-    return ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message!),
-        duration: const Duration(seconds: 2),
       ),
     );
   }

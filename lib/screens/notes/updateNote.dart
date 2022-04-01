@@ -83,7 +83,8 @@ class _UpdateNoteState extends State<UpdateNote> {
         Navigator.push(
             context,
             PageTransition(
-                type: PageTransitionType.bottomToTop, child: HomeScreen()));
+                type: PageTransitionType.bottomToTop,
+                child: HomeScreen(tab: 1)));
       } else {
         snackBar("Something went wrong", context);
       }
@@ -94,30 +95,36 @@ class _UpdateNoteState extends State<UpdateNote> {
     Navigator.push(
         context,
         PageTransition(
-            type: PageTransitionType.bottomToTop, child: HomeScreen()));
-    // setState(() {
-    //   loaded = false;
-    // });
+            type: PageTransitionType.bottomToTop,
+            child: HomeScreen(
+              tab: 1,
+            )));
+  }
 
-    // var res = await ApiCalls.deletNote(
-    //   noteId: noteId!,
-    // );
+  deleteNote() async {
+    setState(() {
+      loaded = false;
+    });
 
-    // var response = res.jsonBody;
+    var res = await ApiCalls.deletNote(
+      noteId: noteId!,
+    );
 
-    // setState(() {
-    //   loaded = true;
-    // });
+    var response = res.jsonBody;
 
-    // if (res.isSuccess) {
-    //   snackBar("Deleted", context);
-    //   Navigator.push(
-    //       context,
-    //       PageTransition(
-    //           type: PageTransitionType.bottomToTop, child: HomeScreen()));
-    // } else {
-    //   snackBar("Something went wrong", context);
-    // }
+    setState(() {
+      loaded = true;
+    });
+
+    if (res.isSuccess) {
+      snackBar("Deleted", context);
+      Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.bottomToTop, child: HomeScreen()));
+    } else {
+      snackBar("Something went wrong", context);
+    }
   }
 
   @override
@@ -159,23 +166,42 @@ class _UpdateNoteState extends State<UpdateNote> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Row(
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: width - 50,
-                              child: CustomTextBoxBorderLess(
-                                controller: titleController,
-                                labelText: "Title",
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: width - 95,
+                                  child: CustomTextBoxBorderLess(
+                                    controller: titleController,
+                                    labelText: "Title",
+                                  ),
+                                ),
+                                catagoryPicker(context),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      deleteNote();
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.delete_forever,
+                                    color: errorColor,
+                                  ),
+                                ),
+                              ],
                             ),
-                            catagoryPicker(context),
+                            Container(
+                              width: width - 70,
+                              height: 2,
+                              color: Colors.black38,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                            ),
                           ],
-                        ),
-                        Container(
-                          width: width,
-                          height: 2,
-                          color: Colors.black38,
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
                         ),
                         Container(
                           width: width,
@@ -192,88 +218,84 @@ class _UpdateNoteState extends State<UpdateNote> {
                                 fontSize: fontSize, fontFamily: defaultFont),
                           ),
                         ),
-                        SizedBox(
-                          width: width,
-                          height: 50,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    textAlign = TextAlign.left;
-                                    selectedIconIndex = "0";
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.format_align_left,
-                                  color: selectedIconIndex == "0"
-                                      ? Colors.black87
-                                      : Colors.black38,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    textAlign = TextAlign.center;
-                                    selectedIconIndex = "1";
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.format_align_center,
-                                  color: selectedIconIndex == "1"
-                                      ? Colors.black87
-                                      : Colors.black38,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    textAlign = TextAlign.justify;
-                                    selectedIconIndex = "2";
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.format_align_justify,
-                                  color: selectedIconIndex == "2"
-                                      ? Colors.black87
-                                      : Colors.black38,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    textAlign = TextAlign.right;
-                                    selectedIconIndex = "3";
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.format_align_right,
-                                  color: selectedIconIndex == "3"
-                                      ? Colors.black87
-                                      : Colors.black38,
-                                ),
-                              ),
-                              Slider(
-                                value: fontSize,
-                                min: 14,
-                                max: 26,
-                                divisions: 6,
-                                label: fontSize.round().toString(),
-                                onChanged: (double value) {
-                                  setState(() {
-                                    fontSize = value;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        )
+                        optionsMenu(context),
                       ],
                     ),
                   ),
                 ),
               )
             : loadingDialog(context),
+      ),
+    );
+  }
+
+  optionsMenu(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: 50,
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                textAlign = TextAlign.left;
+                selectedIconIndex = "0";
+              });
+            },
+            icon: Icon(
+              Icons.format_align_left,
+              color: selectedIconIndex == "0" ? Colors.black87 : Colors.black38,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                textAlign = TextAlign.center;
+                selectedIconIndex = "1";
+              });
+            },
+            icon: Icon(
+              Icons.format_align_center,
+              color: selectedIconIndex == "1" ? Colors.black87 : Colors.black38,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                textAlign = TextAlign.justify;
+                selectedIconIndex = "2";
+              });
+            },
+            icon: Icon(
+              Icons.format_align_justify,
+              color: selectedIconIndex == "2" ? Colors.black87 : Colors.black38,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                textAlign = TextAlign.right;
+                selectedIconIndex = "3";
+              });
+            },
+            icon: Icon(
+              Icons.format_align_right,
+              color: selectedIconIndex == "3" ? Colors.black87 : Colors.black38,
+            ),
+          ),
+          Slider(
+            value: fontSize,
+            min: 14,
+            max: 26,
+            divisions: 6,
+            label: fontSize.round().toString(),
+            onChanged: (double value) {
+              setState(() {
+                fontSize = value;
+              });
+            },
+          ),
+        ],
       ),
     );
   }

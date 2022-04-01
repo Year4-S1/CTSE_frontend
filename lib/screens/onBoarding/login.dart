@@ -6,6 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:noteworthy/api/api_calls.dart';
 import 'package:noteworthy/screens/home.dart';
 import '../../styles.dart';
+import '../../utils/helper.dart';
 import '../../widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import '../../utils/settings.dart';
@@ -40,35 +41,32 @@ class _LoginScreenState extends State<LoginScreen> {
         loaded = true;
       });
 
-      if (response.isSuccess) {
-        if (json['message'] == "OTP Sent") {
-          Navigator.push(
+      if (json['message'] == "OTP Sent") {
+        Navigator.push(
+          context,
+          PageTransition(
+              type: PageTransitionType.rightToLeft,
+              child: OtpVerifyScreen(
+                  emailController.text, passwordController.text)),
+        );
+      } else if (json['message'] == "Valid password") {
+        var json = response.jsonBody;
+        await Settings.setSigned(true);
+        String accessToken = json['token'];
+        await Settings.setAccessToken(accessToken);
+        String userId = json['id'];
+        await Settings.setUserID(userId);
+        await Settings.setUserEmail(emailController.text);
+
+        snackBar("Welcome", context);
+        Navigator.push(
             context,
             PageTransition(
-                type: PageTransitionType.rightToLeft,
-                child: OtpVerifyScreen(emailController.text)),
-          );
-        } else if (json['message'] == "Valid password") {
-          var json = response.jsonBody;
-          await Settings.setSigned(true);
-          String accessToken = json['token'];
-          await Settings.setAccessToken(accessToken);
-          String userId = json['id'];
-          await Settings.setUserID(userId);
-          await Settings.setUserEmail(emailController.text);
-
-          snackBar("Welcome");
-          Navigator.push(
-              context,
-              PageTransition(
-                  type: PageTransitionType.rightToLeft, child: HomeScreen()));
-        } else if (json['message'] == "Invalid password") {
-          snackBar("Invalid password");
-        } else {
-          snackBar("Something went wrong");
-        }
+                type: PageTransitionType.rightToLeft, child: HomeScreen()));
+      } else if (json['error'] == "Invalid Password") {
+        snackBar("Invalid password", context);
       } else {
-        snackBar("Something went wrong");
+        snackBar("Something went wrong", context);
       }
     }
   }
@@ -162,15 +160,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 )
               : loadingDialog(context),
         ),
-      ),
-    );
-  }
-
-  snackBar(String? message) {
-    return ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message!),
-        duration: const Duration(seconds: 2),
       ),
     );
   }

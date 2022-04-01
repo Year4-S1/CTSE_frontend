@@ -12,6 +12,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool? checker = false;
   @override
   void initState() {
     super.initState();
@@ -19,8 +20,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   navChecker() async {
-    bool? checker = await Settings.getSigned();
-    checker == null ? checker == false : null;
+    checker = await Settings.getSigned();
+    checker == null ? checker = false : print(checker);
 
     if (checker!) {
       Future.delayed(const Duration(seconds: 5), () {

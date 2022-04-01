@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool? signed = false; //check if user is signed in
   bool _loaded = false; //to check if data is loaded to load body
 
-  String activeCategory = "all"; //used to filter notes
+  String? activeCategory = "all"; //used to filter notes
   String? userId;
 
   int tabSetter = 0; //tab state checker
@@ -58,7 +58,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     signed = await Settings.getSigned();
     userId = await Settings.getUserID();
-    activeCategory = (await Settings.getActiveCategory())!;
+
+    if (await Settings.getActiveCategory() == null) {
+      activeCategory == "all";
+    } else {
+      activeCategory = await Settings.getActiveCategory();
+    }
 
     var res = await ApiCalls.getNotes(userId: userId!);
 
@@ -87,7 +92,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     signed = await Settings.getSigned();
     userId = await Settings.getUserID();
-    activeCategory = (await Settings.getActiveCategory())!;
+    if (await Settings.getActiveCategory() == null) {
+      activeCategory == "all";
+    } else {
+      activeCategory = await Settings.getActiveCategory();
+    }
 
     var res = await ApiCalls.getTodos(userId: userId!);
 
@@ -252,8 +261,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: const EdgeInsets.all(10),
                                 child: ConstrainedBox(
                                   constraints: const BoxConstraints(
-                                    minHeight: 50.0,
-                                    maxHeight: 140.0,
+                                    minHeight: 40.0,
+                                    maxHeight: 180.0,
                                   ),
                                   child: Text(noteList[index]['noteMessage'],
                                       textAlign: TextAlign.left),
