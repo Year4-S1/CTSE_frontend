@@ -95,6 +95,29 @@ class _UpdateNoteState extends State<UpdateNote> {
         context,
         PageTransition(
             type: PageTransitionType.bottomToTop, child: HomeScreen()));
+    // setState(() {
+    //   loaded = false;
+    // });
+
+    // var res = await ApiCalls.deletNote(
+    //   noteId: noteId!,
+    // );
+
+    // var response = res.jsonBody;
+
+    // setState(() {
+    //   loaded = true;
+    // });
+
+    // if (res.isSuccess) {
+    //   snackBar("Deleted", context);
+    //   Navigator.push(
+    //       context,
+    //       PageTransition(
+    //           type: PageTransitionType.bottomToTop, child: HomeScreen()));
+    // } else {
+    //   snackBar("Something went wrong", context);
+    // }
   }
 
   @override
