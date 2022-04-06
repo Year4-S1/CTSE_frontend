@@ -93,10 +93,6 @@ class _UpdateTodoState extends State<UpdateTodo> {
 
       var response = res.jsonBody;
 
-      setState(() {
-        loaded = true;
-      });
-
       if (res.isSuccess) {
         snackBar("Saved", context);
         Navigator.push(
@@ -113,6 +109,9 @@ class _UpdateTodoState extends State<UpdateTodo> {
     } else {
       snackBar("Enter title", context);
     }
+    setState(() {
+      loaded = true;
+    });
   }
 
   @override

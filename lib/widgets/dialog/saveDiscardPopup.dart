@@ -24,7 +24,7 @@ saveDiscardPopup(BuildContext context, String type, dynamic Function() save,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: 40),
+                padding: const EdgeInsets.only(top: 40),
                 child: Text(
                   'Discard $type?',
                   style: LogOut,

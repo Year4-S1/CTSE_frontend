@@ -92,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     signed = await Settings.getSigned();
     userId = await Settings.getUserID();
+
     if (await Settings.getActiveCategory() == null) {
       activeCategory == "all";
     } else {
@@ -137,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+
     return WillPopScope(
       onWillPop: () async {
         return shouldPop;

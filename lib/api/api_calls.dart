@@ -207,18 +207,15 @@ class ApiCalls {
   }
 
   static Future<ApiResponse> todoActiveSetter({
-    required String userId,
     required String todoId,
     required bool active,
   }) async {
     try {
       var raw = <String, dynamic>{
-        "userId": userId,
-        "reminderId": todoId,
         "activeStatus": active,
       };
 
-      return ApiCaller.putRequest('/reminder/create/active', data: raw);
+      return ApiCaller.putRequest('/reminder/update/active/$todoId', data: raw);
     } catch (e) {
       ApiResponse response = ApiResponse();
       response.isSuccess = false;

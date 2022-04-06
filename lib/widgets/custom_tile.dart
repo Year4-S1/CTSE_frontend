@@ -26,13 +26,10 @@ class CustomTile extends StatefulWidget {
 
 class _CustomTileScreen extends State<CustomTile> {
   bool checked = false;
-  String? userId;
 
   setStatus() async {
-    userId = await Settings.getUserID();
-
-    var res = await ApiCalls.todoActiveSetter(
-        active: checked, userId: userId!, todoId: widget.todoId);
+    var res =
+        await ApiCalls.todoActiveSetter(active: checked, todoId: widget.todoId);
   }
 
   @override

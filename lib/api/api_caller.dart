@@ -109,7 +109,7 @@ class ApiCaller {
       var connectivityResult = await (Connectivity().checkConnectivity());
       if (connectivityResult == ConnectivityResult.mobile ||
           connectivityResult == ConnectivityResult.wifi) {
-        Map<String, String> allHeaders = new Map();
+        Map<String, String> allHeaders = {};
 
         if (headers != null && headers.length > 0) {
           allHeaders.addAll(headers);
