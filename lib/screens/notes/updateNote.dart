@@ -98,7 +98,9 @@ class _UpdateNoteState extends State<UpdateNote> {
   getFavorite() async {
     var res = await ApiCalls.getFavorite(noteId: noteId!);
 
-    if (res.jsonBody['data'] != []) {
+    print(res.jsonBody['data']);
+
+    if (res.jsonBody['data'].isEmpty) {
       favoriteSetter = false;
     } else {
       favoriteSetter = res.jsonBody['data'][0]['favoriteStatus'];
