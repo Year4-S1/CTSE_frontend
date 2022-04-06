@@ -1,15 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:noteworthy/api/api_calls.dart';
 import 'package:noteworthy/screens/catagories/catagoryMenu.dart';
-import 'package:noteworthy/screens/home.dart';
-import 'package:noteworthy/screens/onBoarding/login.dart';
-import 'package:noteworthy/utils/settings.dart';
 import 'package:noteworthy/widgets/dialog/loadingDialog.dart';
+import 'package:noteworthy/screens/onBoarding/login.dart';
 import 'package:page_transition/page_transition.dart';
-
-import '../screens/favourite/favDash.dart';
-import '../styles.dart';
+import 'package:noteworthy/utils/settings.dart';
+import 'package:noteworthy/api/api_calls.dart';
+import 'package:noteworthy/screens/home.dart';
+import 'package:flutter/material.dart';
 import '../utils/helper.dart';
+import '../styles.dart';
 
 class NavDrawer extends StatefulWidget {
   NavDrawer();
@@ -112,11 +110,6 @@ class _NavDrawerScreen extends State<NavDrawer> {
                 ),
                 onPressed: () {
                   Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.bottomToTop,
-                          child: FavDash()));
                 }),
             title: const Text(
               'Favourite',
