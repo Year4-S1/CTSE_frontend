@@ -102,7 +102,10 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
       Navigator.push(
           context,
           PageTransition(
-              type: PageTransitionType.bottomToTop, child: HomeScreen()));
+              type: PageTransitionType.bottomToTop,
+              child: HomeScreen(
+                tab: 0,
+              )));
     }
   }
 
@@ -120,7 +123,9 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
           child: CustomAppbarWidget(
             mainTitle: "Noteworthy",
             leading: "Navigate",
-            navLocation: HomeScreen(),
+            navLocation: HomeScreen(
+              tab: 0,
+            ),
             logo: true,
             rightIcon: "",
           ),
@@ -147,6 +152,7 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
                       CustomTextBoxBorderLess(
                         controller: pinkController,
                         labelText: "Pink Bookmark",
+                        suffixIcon: clearButton(pinkController),
                         prifixIcon: const Icon(
                           Icons.bookmark_add,
                           color: catagoryPink,
@@ -157,6 +163,7 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
                       CustomTextBoxBorderLess(
                         controller: purpleController,
                         labelText: "Purple Bookmark",
+                        suffixIcon: clearButton(purpleController),
                         prifixIcon: const Icon(
                           Icons.bookmark_add,
                           color: catagoryPurple,
@@ -167,6 +174,7 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
                       CustomTextBoxBorderLess(
                         controller: blueController,
                         labelText: "Blue Bookmark",
+                        suffixIcon: clearButton(blueController),
                         prifixIcon: const Icon(
                           Icons.bookmark_add,
                           color: catagoryBlue,
@@ -177,6 +185,7 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
                       CustomTextBoxBorderLess(
                         controller: greenController,
                         labelText: "Green Bookmark",
+                        suffixIcon: clearButton(greenController),
                         prifixIcon: const Icon(
                           Icons.bookmark_add,
                           color: catagoryGreen,
@@ -187,6 +196,7 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
                       CustomTextBoxBorderLess(
                         controller: yellowController,
                         labelText: "Yellow Bookmark",
+                        suffixIcon: clearButton(yellowController),
                         prifixIcon: const Icon(
                           Icons.bookmark_add,
                           color: catagoryYellow,
@@ -197,6 +207,7 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
                       CustomTextBoxBorderLess(
                         controller: orangeController,
                         labelText: "Orange Bookmark",
+                        suffixIcon: clearButton(orangeController),
                         prifixIcon: const Icon(
                           Icons.bookmark_add,
                           color: catagoryOrange,
@@ -220,6 +231,21 @@ class _CatagoryMenuScreenState extends State<CatagoryMenuScreen> {
                 ),
               )
             : loadingDialog(context),
+      ),
+    );
+  }
+
+  clearButton(TextEditingController controller) {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          controller.clear();
+        });
+      },
+      icon: const Icon(
+        Icons.close,
+        color: Colors.black26,
+        size: 26,
       ),
     );
   }

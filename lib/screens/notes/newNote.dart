@@ -70,7 +70,10 @@ class _NewNoteState extends State<NewNote> {
         Navigator.push(
             context,
             PageTransition(
-                type: PageTransitionType.bottomToTop, child: HomeScreen()));
+                type: PageTransitionType.bottomToTop,
+                child: HomeScreen(
+                  tab: 0,
+                )));
       } else {
         snackBar("Something went wrong", context);
       }
@@ -95,7 +98,9 @@ class _NewNoteState extends State<NewNote> {
           rightOnPress: () {
             postNote();
           },
-          navLocation: HomeScreen(),
+          navLocation: HomeScreen(
+            tab: 0,
+          ),
         ),
       ),
       body: WillPopScope(
@@ -320,6 +325,9 @@ class _NewNoteState extends State<NewNote> {
     Navigator.push(
         context,
         PageTransition(
-            type: PageTransitionType.bottomToTop, child: HomeScreen()));
+            type: PageTransitionType.bottomToTop,
+            child: HomeScreen(
+              tab: 0,
+            )));
   }
 }

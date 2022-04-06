@@ -1,13 +1,14 @@
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:noteworthy/screens/todo/updateTodo.dart';
 import 'package:noteworthy/widgets/dialog/loadingDialog.dart';
 import 'package:noteworthy/screens/notes/updateNote.dart';
+import 'package:noteworthy/screens/todo/updateTodo.dart';
 import 'package:noteworthy/widgets/custom_appbar.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:noteworthy/screens/todo/newTodo.dart';
 import 'package:noteworthy/widgets/custom_tile.dart';
 import 'package:noteworthy/widgets/navDrawer.dart';
 import 'package:noteworthy/utils/settings.dart';
+import '../widgets/dialog/confirmDeletePopup.dart';
 import '../widgets/dialog/updatePassword.dart';
 import 'package:noteworthy/api/api_calls.dart';
 import 'package:flutter/material.dart';
@@ -42,11 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     getNotes();
-    getTodos();
 
     if (widget.tab != null) {
       tabSetter = widget.tab!;
     }
+
     super.initState();
   }
 
@@ -65,19 +66,28 @@ class _HomeScreenState extends State<HomeScreen> {
       activeCategory = await Settings.getActiveCategory();
     }
 
-    var res = await ApiCalls.getNotes(userId: userId!);
-
-    Map<String, dynamic> response = res.jsonBody;
-
-    for (int i = 0; i < response['data'].length; i++) {
-      if (activeCategory == response['data'][i]['categoryColor']) {
-        noteList.add(response['data'][i]);
-      } else if (activeCategory == "all") {
-        noteList.add(response['data'][i]);
-      } else {
-        null;
+    if (activeCategory == "favourite") {
+      var favRes = await ApiCalls.getFavoriteNotes(userId: userId!);
+      Map<String, dynamic> response2 = favRes.jsonBody;
+      for (int i = 0; i < response2['data'].length; i++) {
+        noteList.add(response2['data'][i]);
+      }
+    } else {
+      var res = await ApiCalls.getNotes(userId: userId!);
+      Map<String, dynamic> response = res.jsonBody;
+      for (int i = 0; i < response['data'].length; i++) {
+        if (activeCategory == response['data'][i]['categoryColor']) {
+          noteList.add(response['data'][i]);
+        } else if (activeCategory == "all") {
+          noteList.add(response['data'][i]);
+          print(response['data'][i]);
+        } else {
+          null;
+        }
       }
     }
+
+    // getTodos();
 
     setState(() {
       _loaded = true;
@@ -112,10 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
         todoList.add(response['data'][i]);
       }
     }
-
-    setState(() {
-      _loaded = true;
-    });
   }
 
   deleteTodo(String todoId) async {
@@ -194,6 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: width,
               child: DefaultTabController(
                 length: 2,
+                initialIndex: tabSetter,
                 child: Scaffold(
                   appBar: TabBar(
                     indicatorColor: defaultColor,

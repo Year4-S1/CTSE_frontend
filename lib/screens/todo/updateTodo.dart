@@ -132,7 +132,9 @@ class _UpdateTodoState extends State<UpdateTodo> {
           rightOnPress: () {
             updateTodo();
           },
-          navLocation: HomeScreen(),
+          navLocation: HomeScreen(
+            tab: 1,
+          ),
         ),
       ),
       body: WillPopScope(

@@ -13,6 +13,7 @@ class CustomTextBox extends StatelessWidget {
   TextStyle hintStyle;
   String? labelText;
   String? prifixIcon;
+  Widget? suffixIcon;
   String? type;
   bool obscureText;
   String? Function(dynamic)? validator;
@@ -30,6 +31,7 @@ class CustomTextBox extends StatelessWidget {
     this.hintStyle = HintStyle1,
     this.labelText,
     this.prifixIcon,
+    this.suffixIcon,
     this.obscureText = false,
   });
 
@@ -78,6 +80,7 @@ class CustomTextBox extends StatelessWidget {
           readOnly: readOnly,
           decoration: InputDecoration(
             filled: true,
+            enabled: enabled,
             fillColor: Colors.white,
             hintStyle: greyNormalTextStyle,
             labelText: labelText,
@@ -95,7 +98,14 @@ class CustomTextBox extends StatelessWidget {
             focusedBorder: const OutlineInputBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 borderSide: BorderSide(color: Colors.black12, width: 2.0)),
-            enabled: enabled,
+            suffixIcon: suffixIcon != null
+                ? Container(
+                    width: 35,
+                    height: 35,
+                    margin: const EdgeInsets.only(left: 3, top: 7),
+                    child: suffixIcon,
+                  )
+                : null,
           ),
         ),
       ),

@@ -11,14 +11,14 @@ import '../../widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import '../../utils/settings.dart';
 
-class LoginScreen extends StatefulWidget {
-  _LoginScreenState createState() => _LoginScreenState();
+class FavDash extends StatefulWidget {
+  _FavDashState createState() => _FavDashState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _FavDashState extends State<FavDash> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool shouldPop = false; //to make sure can't go back
+  bool shouldPop = true; //to make sure can't go back
   final formKey = GlobalKey<FormState>();
   bool loaded = true;
   bool passwordVisbility = false;
@@ -26,50 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-  }
-
-  loginRegister() async {
-    if (formKey.currentState!.validate()) {
-      setState(() {
-        loaded = false;
-      });
-      final response = await ApiCalls.signInUp(
-          email: emailController.text, password: passwordController.text);
-
-      var json = response.jsonBody;
-
-      setState(() {
-        loaded = true;
-      });
-
-      if (json['message'] == "OTP Sent") {
-        Navigator.push(
-          context,
-          PageTransition(
-              type: PageTransitionType.rightToLeft,
-              child: OtpVerifyScreen(
-                  emailController.text, passwordController.text)),
-        );
-      } else if (json['message'] == "Valid password") {
-        var json = response.jsonBody;
-        await Settings.setSigned(true);
-        String accessToken = json['token'];
-        await Settings.setAccessToken(accessToken);
-        String userId = json['id'];
-        await Settings.setUserID(userId);
-        await Settings.setUserEmail(emailController.text);
-
-        snackBar("Welcome", context);
-        Navigator.push(
-            context,
-            PageTransition(
-                type: PageTransitionType.rightToLeft, child: HomeScreen()));
-      } else if (json['error'] == "Invalid Password") {
-        snackBar("Invalid password", context);
-      } else {
-        snackBar("Something went wrong", context);
-      }
-    }
   }
 
   @override
@@ -84,7 +40,13 @@ class _LoginScreenState extends State<LoginScreen> {
           leading: "None",
           logo: true,
           rightIcon: "",
-          navLocation: LoginScreen(),
+          navLocation: FavDash(),
+          backOnPress: () {
+            Navigator.push(
+                context,
+                PageTransition(
+                    type: PageTransitionType.bottomToTop, child: HomeScreen()));
+          },
         ),
       ),
       body: WillPopScope(
@@ -157,9 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 50,
                           ),
                           GestureDetector(
-                            onTap: () {
-                              loginRegister();
-                            },
+                            onTap: () {},
                             child: CustomButton(
                               text: "Login",
                               width: width - 60,

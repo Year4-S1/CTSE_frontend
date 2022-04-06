@@ -14,6 +14,7 @@ class CustomTextBoxBorderLess extends StatelessWidget {
   String? labelText;
   String? errorText;
   Widget? prifixIcon;
+  Widget? suffixIcon;
   bool obscureText;
   InputBorder? border;
 
@@ -29,12 +30,23 @@ class CustomTextBoxBorderLess extends StatelessWidget {
       this.labelText,
       this.errorText,
       this.prifixIcon,
+      this.suffixIcon,
       this.obscureText = false,
       this.border});
 
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
+      Container(
+        child: prifixIcon != null
+            ? Container(
+                width: 35,
+                height: 35,
+                margin: const EdgeInsets.only(left: 3, top: 7),
+                child: prifixIcon,
+              )
+            : null,
+      ),
       Container(
         padding: EdgeInsets.only(left: prifixIcon != null ? 50 : 10, right: 10),
         child: TextFormField(
@@ -55,21 +67,19 @@ class CustomTextBoxBorderLess extends StatelessWidget {
             labelStyle: LabelStyle1,
             errorText: errorText,
             errorStyle: errorStyle,
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
             enabled: enabled,
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+            suffixIcon: suffixIcon != null
+                ? Container(
+                    width: 35,
+                    height: 35,
+                    margin: const EdgeInsets.only(left: 3, top: 7),
+                    child: suffixIcon,
+                  )
+                : null,
           ),
         ),
       ),
-      Container(
-        child: prifixIcon != null
-            ? Container(
-                width: 35,
-                height: 35,
-                margin: const EdgeInsets.only(left: 3, top: 7),
-                child: prifixIcon,
-              )
-            : null,
-      )
     ]);
   }
 }

@@ -150,11 +150,57 @@ class ApiCalls {
     }
   }
 
-  static Future<ApiResponse> deletNote({
+  static Future<ApiResponse> deleteNote({
     required String noteId,
   }) async {
     try {
       return ApiCaller.deleteRequest('/note/deletenote/$noteId');
+    } catch (e) {
+      ApiResponse response = ApiResponse();
+      response.isSuccess = false;
+      response.statusMessage = e.toString();
+      return response;
+    }
+  }
+
+  static Future<ApiResponse> getFavoriteNotes({
+    required String userId,
+  }) async {
+    try {
+      Map<String, String> headers = {};
+      headers["Accept"] = "multipart/form-data";
+
+      return ApiCaller.getRequest('/favorite/get/$userId');
+    } catch (e) {
+      ApiResponse response = ApiResponse();
+      response.isSuccess = false;
+      response.statusMessage = e.toString();
+      return response;
+    }
+  }
+
+  static Future<ApiResponse> getFavorite({
+    required String noteId,
+  }) async {
+    try {
+      Map<String, String> headers = {};
+      headers["Accept"] = "multipart/form-data";
+
+      return ApiCaller.getRequest('/favorite/getone/$noteId');
+    } catch (e) {
+      ApiResponse response = ApiResponse();
+      response.isSuccess = false;
+      response.statusMessage = e.toString();
+      return response;
+    }
+  }
+
+  static Future<ApiResponse> setFavorite(
+      {required String noteId, required String userId}) async {
+    try {
+      var raw = <String, dynamic>{"noteId": noteId, "userId": userId};
+
+      return ApiCaller.postRequest('/favorite/add', data: raw);
     } catch (e) {
       ApiResponse response = ApiResponse();
       response.isSuccess = false;

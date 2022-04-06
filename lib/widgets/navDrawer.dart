@@ -7,6 +7,7 @@ import 'package:noteworthy/utils/settings.dart';
 import 'package:noteworthy/widgets/dialog/loadingDialog.dart';
 import 'package:page_transition/page_transition.dart';
 
+import '../screens/favourite/favDash.dart';
 import '../styles.dart';
 import '../utils/helper.dart';
 
@@ -102,6 +103,30 @@ class _NavDrawerScreen extends State<NavDrawer> {
             ),
             onTap: () => {activeCatagorySetter("all")},
           ),
+          ListTile(
+            leading: IconButton(
+                icon: const Icon(
+                  Icons.star,
+                  color: catagoryYellow,
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.bottomToTop,
+                          child: FavDash()));
+                }),
+            title: const Text(
+              'Favourite',
+              style: SubHeadStyle,
+            ),
+            onTap: () => {
+              //
+              activeCatagorySetter("favourite")
+            },
+          ),
           Container(
             height: 10,
             color: Colors.black12,
@@ -124,50 +149,67 @@ class _NavDrawerScreen extends State<NavDrawer> {
                       child: CatagoryMenuScreen())),
             },
           ),
-          Container(
-            height: height - 380,
-            alignment: Alignment.center,
-            child: catagoryList.isNotEmpty
-                ? GridView.builder(
-                    padding: EdgeInsets.zero,
-                    physics: const ScrollPhysics(),
-                    itemCount: catagoryList['data'].length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            mainAxisExtent: 50, crossAxisCount: 1),
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: IconButton(
-                            icon: Icon(
-                              Icons.bookmark,
-                              color: iconColorSetter(
-                                  catagoryList['data'][index]['categoryColor']),
-                              size: 30,
+          loaded
+              ? Container(
+                  height: height - 450,
+                  alignment: Alignment.center,
+                  child: catagoryList.isNotEmpty
+                      ? GridView.builder(
+                          padding: EdgeInsets.zero,
+                          physics: const ScrollPhysics(),
+                          itemCount: catagoryList['data'].length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  mainAxisExtent: 50, crossAxisCount: 1),
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              leading: IconButton(
+                                  icon: Icon(
+                                    Icons.bookmark,
+                                    color: iconColorSetter(catagoryList['data']
+                                        [index]['categoryColor']),
+                                    size: 30,
+                                  ),
+                                  onPressed: () {}),
+                              title: Text(
+                                catagoryList['data'][index]['categoryName']
+                                            .toString() ==
+                                        ""
+                                    ? "Unassigned"
+                                    : catagoryList['data'][index]
+                                            ['categoryName']
+                                        .toString(),
+                                overflow: TextOverflow.ellipsis,
+                                style: SubHeadStyle,
+                              ),
+                              trailing: Text(
+                                catagoryList['data'][index]['noteCount']
+                                    .toString(),
+                                style: SubHeadStyle,
+                              ),
+                              onTap: () {
+                                activeCatagorySetter(catagoryList['data'][index]
+                                    ['categoryColor']);
+                              },
+                            );
+                          },
+                        )
+                      : Center(
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.height - 200,
+                            child: Center(
+                              child: Text(
+                                "No Todo",
+                                style: greyNormalTextStyle,
+                              ),
                             ),
-                            onPressed: () {}),
-                        title: Text(
-                          catagoryList['data'][index]['categoryName']
-                                      .toString() ==
-                                  ""
-                              ? "Unassigned"
-                              : catagoryList['data'][index]['categoryName']
-                                  .toString(),
-                          overflow: TextOverflow.ellipsis,
-                          style: SubHeadStyle,
+                          ),
                         ),
-                        trailing: Text(
-                          catagoryList['data'][index]['noteCount'].toString(),
-                          style: SubHeadStyle,
-                        ),
-                        onTap: () {
-                          activeCatagorySetter(
-                              catagoryList['data'][index]['categoryColor']);
-                        },
-                      );
-                    },
-                  )
-                : loadingDialog(context),
-          ),
+                )
+              : SizedBox(
+                  height: height - 450,
+                  child: loadingDialog(context),
+                ),
           SizedBox(
             height: 50,
             child: ListTile(

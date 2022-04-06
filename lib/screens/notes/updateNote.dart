@@ -9,6 +9,7 @@ import 'package:page_transition/page_transition.dart';
 
 import '../../styles.dart';
 import '../../utils/helper.dart';
+import '../../widgets/dialog/confirmDeletePopup.dart';
 import '../../widgets/dialog/saveDiscardPopup.dart';
 
 class UpdateNote extends StatefulWidget {
@@ -35,6 +36,7 @@ class _UpdateNoteState extends State<UpdateNote> {
   bool _valueSet = false;
   String? userId;
   String? noteId;
+  bool favoriteSetter = false;
 
   @override
   void initState() {
@@ -55,9 +57,9 @@ class _UpdateNoteState extends State<UpdateNote> {
       titleController.text = widget.noteDetails['noteTitle'];
       bodyController.text = widget.noteDetails['noteMessage'];
       noteId = widget.noteDetails['_id'];
-
-      loaded = true;
     });
+
+    getFavorite();
   }
 
   updateNote() async {
@@ -84,10 +86,41 @@ class _UpdateNoteState extends State<UpdateNote> {
             context,
             PageTransition(
                 type: PageTransitionType.bottomToTop,
-                child: HomeScreen(tab: 1)));
+                child: HomeScreen(
+                  tab: 0,
+                )));
       } else {
         snackBar("Something went wrong", context);
       }
+    }
+  }
+
+  getFavorite() async {
+    var res = await ApiCalls.getFavorite(noteId: noteId!);
+
+    if (res.jsonBody['data'] != []) {
+      favoriteSetter = false;
+    } else {
+      favoriteSetter = res.jsonBody['data'][0]['favoriteStatus'];
+    }
+
+    setState(() {
+      loaded = true;
+    });
+  }
+
+  setFavorite() async {
+    setState(() {
+      favoriteSetter ? favoriteSetter = false : favoriteSetter = true;
+    });
+
+    var res = await ApiCalls.setFavorite(noteId: noteId!, userId: userId!);
+    var response = res.jsonBody;
+
+    if (res.isSuccess) {
+      snackBar("Added to Favorite", context);
+    } else {
+      snackBar("Something went wrong", context);
     }
   }
 
@@ -97,7 +130,7 @@ class _UpdateNoteState extends State<UpdateNote> {
         PageTransition(
             type: PageTransitionType.bottomToTop,
             child: HomeScreen(
-              tab: 1,
+              tab: 0,
             )));
   }
 
@@ -106,7 +139,7 @@ class _UpdateNoteState extends State<UpdateNote> {
       loaded = false;
     });
 
-    var res = await ApiCalls.deletNote(
+    var res = await ApiCalls.deleteNote(
       noteId: noteId!,
     );
 
@@ -121,7 +154,10 @@ class _UpdateNoteState extends State<UpdateNote> {
       Navigator.push(
           context,
           PageTransition(
-              type: PageTransitionType.bottomToTop, child: HomeScreen()));
+              type: PageTransitionType.bottomToTop,
+              child: HomeScreen(
+                tab: 0,
+              )));
     } else {
       snackBar("Something went wrong", context);
     }
@@ -145,7 +181,9 @@ class _UpdateNoteState extends State<UpdateNote> {
           rightOnPress: () {
             updateNote();
           },
-          navLocation: HomeScreen(),
+          navLocation: HomeScreen(
+            tab: 0,
+          ),
         ),
       ),
       body: WillPopScope(
@@ -174,7 +212,7 @@ class _UpdateNoteState extends State<UpdateNote> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 SizedBox(
-                                  width: width - 95,
+                                  width: width - 140,
                                   child: CustomTextBoxBorderLess(
                                     controller: titleController,
                                     labelText: "Title",
@@ -184,7 +222,8 @@ class _UpdateNoteState extends State<UpdateNote> {
                                 IconButton(
                                   onPressed: () {
                                     setState(() {
-                                      deleteNote();
+                                      confirmDeletePopup(context, "Note",
+                                          deleteNote, discardNote);
                                     });
                                   },
                                   icon: const Icon(
@@ -192,10 +231,23 @@ class _UpdateNoteState extends State<UpdateNote> {
                                     color: errorColor,
                                   ),
                                 ),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      setFavorite();
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.star,
+                                    color: favoriteSetter
+                                        ? catagoryYellow
+                                        : Colors.black26,
+                                  ),
+                                ),
                               ],
                             ),
                             Container(
-                              width: width - 70,
+                              width: width,
                               height: 2,
                               color: Colors.black38,
                               margin:

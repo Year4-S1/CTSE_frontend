@@ -101,7 +101,7 @@ leadingButton(
   if (leading == "Back") {
     return IconButton(
         icon: const Icon(Icons.arrow_back_ios, color: Colors.black45),
-        onPressed: rightIcon == "save"
+        onPressed: rightIcon == "save" || rightIcon == "update"
             ? backOnPress
             : () {
                 Navigator.pop(context);
