@@ -23,6 +23,8 @@ class _SplashScreenState extends State<SplashScreen> {
     checker = await Settings.getSigned();
     checker == null ? checker = false : print(checker);
 
+    await Settings.setActiveCategory("all");
+
     if (checker!) {
       Future.delayed(const Duration(seconds: 5), () {
         Navigator.of(context).push(

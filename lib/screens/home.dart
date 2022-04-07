@@ -87,11 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
 
-    // getTodos();
-
-    setState(() {
-      _loaded = true;
-    });
+    getTodos();
   }
 
   getTodos() async {
@@ -122,6 +118,10 @@ class _HomeScreenState extends State<HomeScreen> {
         todoList.add(response['data'][i]);
       }
     }
+
+    setState(() {
+      _loaded = true;
+    });
   }
 
   deleteTodo(String todoId) async {
