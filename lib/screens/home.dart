@@ -8,7 +8,6 @@ import 'package:noteworthy/screens/todo/newTodo.dart';
 import 'package:noteworthy/widgets/custom_tile.dart';
 import 'package:noteworthy/widgets/navDrawer.dart';
 import 'package:noteworthy/utils/settings.dart';
-import '../widgets/dialog/confirmDeletePopup.dart';
 import '../widgets/dialog/updatePassword.dart';
 import 'package:noteworthy/api/api_calls.dart';
 import 'package:flutter/material.dart';

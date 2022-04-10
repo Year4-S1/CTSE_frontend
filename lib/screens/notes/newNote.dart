@@ -84,6 +84,7 @@ class _NewNoteState extends State<NewNote> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(55),
@@ -240,9 +241,7 @@ class _NewNoteState extends State<NewNote> {
     );
   }
 
-  catagoryPicker(
-    BuildContext context,
-  ) {
+  catagoryPicker(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 

@@ -15,8 +15,8 @@ updatePasswordPopup(BuildContext context, TextEditingController oldPassword,
   String token;
 
   clear() {
-    oldPassword.text = "";
-    newPassword.text = "";
+    oldPassword.clear();
+    newPassword.clear();
   }
 
   update(String newPassword, String oldPassword) async {

@@ -40,7 +40,6 @@ class _OtpVerifyScreen extends State<OtpVerifyScreen> {
   @override
   void dispose() {
     errorController!.close();
-
     super.dispose();
   }
 
